@@ -100,54 +100,72 @@ Kapan pun Anda ingin membuka dan melihat website ini di laptop, ikuti langkah in
 ### Langkah 1: Install Node.js dari Nol (Jika Belum Punya)
 **Node.js** adalah "mesin penggerak" wajib agar laptop Anda bisa menyalakan website ini. Memasangnya sangat gampang, sama seperti menginstal aplikasi biasa:
 
-#### 📥 Cara Pasang Lewat Website Resmi (Paling Mudah):
+#### 📥 Cara Pasang Lewat Website Resmi:
 1. Buka browser dan kunjungi: **[https://nodejs.org](https://nodejs.org)**.
-2. Di halaman depan akan ada 2 tombol hijau besar. **PILIH tombol sebelah kiri** yang ada tulisan **LTS (Recommended for Most Users)**. Versi LTS adalah versi yang paling stabil dan tidak mudah error.
-3. Tunggu unduhan selesai:
-   - Di **Mac**: filenya berakhiran `.pkg` (contoh: `node-v20.x.x.pkg`).
-   - Di **Windows**: filenya berakhiran `.msi`.
-4. Buka / klik dua kali file unduhan tersebut dari folder *Downloads*.
-5. Jendela instalasi akan muncul:
-   - Klik tombol **Continue** (Lanjut) terus-menerus.
-   - Klik **Agree** (Setuju) pada persetujuan lisensi.
-   - Klik **Install**.
-   - Masukkan kata sandi (password) atau Touch ID laptop Anda jika Mac meminta izin memasang software baru.
-   - Tunggu sampai muncul pesan sukses bertanda centang hijau: *"The installation was completed successfully"*, lalu klik **Close**.
-6. **Selesai!** Node.js otomatis terpasang bersama temannya bernama **npm** (pengunduh bahan website).
+2. Di halaman depan akan ada 2 tombol hijau besar. **PILIH tombol sebelah kiri** yang ada tulisan **LTS (Recommended for Most Users)**.
+3. Download file installer sesuai laptop Anda:
+   * 🍎 **Pengguna Mac:** Otomatis mendownload file `.pkg` (contoh: `node-v20.x.x.pkg`).
+   * 🪟 **Pengguna Windows:** Otomatis mendownload file `.msi` (contoh: `node-v20.x.x-x64.msi`).
+4. Klik dua kali file yang baru di-download tadi:
+   * **Di Mac:** Klik *Continue* -> *Agree* -> *Install* -> masukkan password/Touch ID -> *Close*.
+   * **Di Windows:** Klik *Next* -> centang *"I accept the terms..."* -> klik *Next* terus-menerus -> klik *Install* -> jika muncul peringatan *User Account Control*, klik *Yes* -> klik *Finish*.
+   *(Catatan untuk Windows: Jika ada kotak opsi "Automatically install necessary tools...", biarkan tidak usah dicentang agar instalasi cepat dan tidak memakan banyak memori).*
 
-#### 🔍 Cara Memastikan Node.js Sudah Masuk:
-1. Buka aplikasi **Terminal** di laptop Anda:
-   *(Di Mac: tekan tombol `Command` + `Spasi`, ketik `Terminal`, lalu tekan `Enter`).*
+#### 🔍 Cara Memastikan Node.js Sudah Terpasang:
+1. Buka jendela perintah di laptop:
+   * 🍎 **Di Mac:** Tekan `Command` + `Spasi`, ketik `Terminal`, lalu tekan `Enter`.
+   * 🪟 **Di Windows:** Tekan tombol `Windows`, ketik `cmd` atau `PowerShell`, lalu tekan `Enter`.
 2. Ketik perintah ini dan tekan `Enter`:
    ```bash
    node -v
    ```
    Jika muncul tulisan angka versi seperti `v20.18.0` atau `v22.x.x`, berarti **Node.js sudah aktif sempurna!**
-3. Cek juga versi npm:
+3. Cek juga pasangannya (**npm**):
    ```bash
    npm -v
    ```
-   Jika muncul angka (misalnya `10.8.2`), berarti alat penginstal komponen sudah siap tempur.
+   Jika muncul angka (misalnya `10.8.2`), berarti npm sudah siap digunakan.
 
 ---
 
-### Langkah 2: Buka Folder Proyek di Terminal
-```bash
-cd /Users/alvin/Desktop/Ruang_Siar
-```
+### Langkah 2: Buka Folder Proyek di Terminal / Command Prompt
+
+Pilih cara sesuai sistem operasi Anda:
+
+* 🍎 **Untuk Pengguna Mac:**
+  Buka Terminal, ketik:
+  ```bash
+  cd /Users/alvin/Desktop/Ruang_Siar
+  ```
+
+* 🪟 **Untuk Pengguna Windows (Trik Paling Mudah & Cepat Tanpa Ngetik Path Panjang):**
+  1. Buka **File Explorer** (folder kuning tempat melihat file di Windows).
+  2. Masuk ke dalam folder proyek `Ruang-Siar`.
+  3. Klik pada **Address Bar** di bagian atas (tempat tulisan `C:\Users\...`).
+  4. Hapus tulisannya, lalu ketik `cmd` atau `powershell` dan tekan `Enter`.
+  5. Jendela hitam langsung terbuka dan sudah otomatis berada di dalam folder proyek!
+
+---
 
 ### Langkah 3: Install Kebutuhan Website (Hanya perlu sekali di awal)
+Ketik perintah ini di Terminal / CMD lalu tekan `Enter`:
 ```bash
 npm install
 ```
+*Tunggu proses download library selesai sampai muncul tulisan `added ... packages`.*
+
+---
 
 ### Langkah 4: Jalankan Mesin Website
+Ketik perintah ini lalu tekan `Enter`:
 ```bash
 npm run dev
 ```
 
+---
+
 ### Langkah 5: Buka di Browser Anda
-Setelah keluar tulisan `Ready in ...ms`, buka aplikasi Chrome/Safari/Brave dan kunjungi:
+Setelah keluar tulisan `Ready in ...ms`, buka browser (Chrome, Edge, atau Safari) dan kunjungi:
 - 🌐 **Halaman Utama (Publik):** [http://localhost:3000](http://localhost:3000)
 - 🔐 **Halaman Login Admin:** [http://localhost:3000/login](http://localhost:3000/login)
 - 🎛️ **Halaman Dashboard CMS:** [http://localhost:3000/admin](http://localhost:3000/admin)
@@ -156,7 +174,7 @@ Setelah keluar tulisan `Ready in ...ms`, buka aplikasi Chrome/Safari/Brave dan k
 > - **Username:** `admin`
 > - **Password:** `admin`
 
-*(Untuk mematikan website, kembali ke jendela Terminal lalu tekan tombol keyboard `Ctrl` + `C`).*
+*(Untuk mematikan website, kembali ke jendela Terminal/CMD lalu tekan kombinasi tombol keyboard `Ctrl` + `C`).*
 
 ---
 
