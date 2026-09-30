@@ -2,6 +2,70 @@ import { Broadcast, News } from '@/types';
 
 export const initialBroadcasts: Broadcast[] = [
   {
+    id: 'broadcast-ruang-siar-1',
+    title: 'Ruang Siar 1: Nostalgia Hits Bersama Sigit James',
+    slug: 'ruang-siar-1',
+    description: 'Edisi perdana Ruang Siar dibawakan langsung oleh penyiar Sigit James. Menghadirkan obrolan pembuka hangat dan rangkaian 8 lagu nostalgia legendaris: The Corrs, Las Ketchup, Base Jam, Peterpan, Los Del Rio, KLa Project, hingga Madonna.',
+    youtubePlaylistUrl: 'https://www.youtube.com/watch?v=s810_uur10w&list=PLJT4avQS_CwM',
+    thumbnailUrl: 'https://i.ytimg.com/vi/s810_uur10w/maxresdefault.jpg',
+    category: 'Siaran Utama',
+    duration: '30 Menit',
+    status: 'Published',
+    publishedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Pembuka Siaran: Ruang Siar 1',
+        artistOrSpeaker: 'Penyiar: Sigit James',
+        type: 'siaran',
+      },
+      {
+        time: '01:51',
+        title: 'Breathless',
+        artistOrSpeaker: 'The Corrs',
+        type: 'lagu',
+      },
+      {
+        time: '05:33',
+        title: 'Aserejé (The Ketchup Song)',
+        artistOrSpeaker: 'Las Ketchup',
+        type: 'lagu',
+      },
+      {
+        time: '09:07',
+        title: 'Jatuh Cinta',
+        artistOrSpeaker: 'Base Jam',
+        type: 'lagu',
+      },
+      {
+        time: '13:34',
+        title: 'Mungkin Nanti',
+        artistOrSpeaker: 'Peterpan',
+        type: 'lagu',
+      },
+      {
+        time: '18:03',
+        title: 'Macarena (Bayside Boys Remix)',
+        artistOrSpeaker: 'Los Del Rio',
+        type: 'lagu',
+      },
+      {
+        time: '21:46',
+        title: 'Terpuruk Ku Disini',
+        artistOrSpeaker: 'KLa Project',
+        type: 'lagu',
+      },
+      {
+        time: '26:04',
+        title: 'La Isla Bonita',
+        artistOrSpeaker: 'Madonna',
+        type: 'lagu',
+      },
+    ],
+  },
+  {
     id: 'broadcast-1',
     title: 'Ruang Siar Pagi: Gelombang Pagi & Irama Nuswantara',
     slug: 'ruang-siar-pagi',
