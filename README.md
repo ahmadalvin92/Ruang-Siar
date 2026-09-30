@@ -83,8 +83,7 @@ Ikuti 3 tahap mudah berikut:
    git commit -m "Rilis awal proyek Ruang Siar"
 
    # 4. Menyambungkan laptop Anda ke alamat GitHub yang baru dibuat
-   # (Pastikan URL di bawah sesuai dengan akun GitHub Anda)
-   git remote add origin https://github.com/ahmadalvin92/ruang-siar.git
+   git remote add origin https://github.com/ahmadalvin92/Ruang-Siar.git
 
    # 5. Mengunggah semua file ke GitHub
    git push -u origin main
@@ -98,12 +97,39 @@ Ikuti 3 tahap mudah berikut:
 
 Kapan pun Anda ingin membuka dan melihat website ini di laptop, ikuti langkah ini:
 
-### Langkah 1: Pastikan Node.js Terpasang
-Buka Terminal dan ketik:
-```bash
-node -v
-```
-Jika keluar angka (misalnya `v20.x.x` atau `v22.x.x`), berarti aman! Jika belum ada, download dan pasang dari website resmi: [nodejs.org](https://nodejs.org).
+### Langkah 1: Install Node.js dari Nol (Jika Belum Punya)
+**Node.js** adalah "mesin penggerak" wajib agar laptop Anda bisa menyalakan website ini. Memasangnya sangat gampang, sama seperti menginstal aplikasi biasa:
+
+#### 📥 Cara Pasang Lewat Website Resmi (Paling Mudah):
+1. Buka browser dan kunjungi: **[https://nodejs.org](https://nodejs.org)**.
+2. Di halaman depan akan ada 2 tombol hijau besar. **PILIH tombol sebelah kiri** yang ada tulisan **LTS (Recommended for Most Users)**. Versi LTS adalah versi yang paling stabil dan tidak mudah error.
+3. Tunggu unduhan selesai:
+   - Di **Mac**: filenya berakhiran `.pkg` (contoh: `node-v20.x.x.pkg`).
+   - Di **Windows**: filenya berakhiran `.msi`.
+4. Buka / klik dua kali file unduhan tersebut dari folder *Downloads*.
+5. Jendela instalasi akan muncul:
+   - Klik tombol **Continue** (Lanjut) terus-menerus.
+   - Klik **Agree** (Setuju) pada persetujuan lisensi.
+   - Klik **Install**.
+   - Masukkan kata sandi (password) atau Touch ID laptop Anda jika Mac meminta izin memasang software baru.
+   - Tunggu sampai muncul pesan sukses bertanda centang hijau: *"The installation was completed successfully"*, lalu klik **Close**.
+6. **Selesai!** Node.js otomatis terpasang bersama temannya bernama **npm** (pengunduh bahan website).
+
+#### 🔍 Cara Memastikan Node.js Sudah Masuk:
+1. Buka aplikasi **Terminal** di laptop Anda:
+   *(Di Mac: tekan tombol `Command` + `Spasi`, ketik `Terminal`, lalu tekan `Enter`).*
+2. Ketik perintah ini dan tekan `Enter`:
+   ```bash
+   node -v
+   ```
+   Jika muncul tulisan angka versi seperti `v20.18.0` atau `v22.x.x`, berarti **Node.js sudah aktif sempurna!**
+3. Cek juga versi npm:
+   ```bash
+   npm -v
+   ```
+   Jika muncul angka (misalnya `10.8.2`), berarti alat penginstal komponen sudah siap tempur.
+
+---
 
 ### Langkah 2: Buka Folder Proyek di Terminal
 ```bash
