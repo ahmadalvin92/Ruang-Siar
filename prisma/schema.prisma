@@ -1,0 +1,54 @@
+// Prisma schema for Ruang Siar
+// PostgreSQL-ready database schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Broadcast {
+  id                 String        @id @default(cuid())
+  title              String
+  slug               String        @unique
+  description        String
+  youtubePlaylistUrl String
+  thumbnailUrl       String?
+  category           String        @default("Umum")
+  duration           String?
+  rundown            String?       // JSON stringified RundownItem array (timestamps & tracklist)
+  status             ContentStatus @default(PUBLISHED)
+  publishedAt        DateTime      @default(now())
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model News {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  excerpt      String
+  content      String
+  thumbnailUrl String?
+  category     String        @default("Berita")
+  status       ContentStatus @default(PUBLISHED)
+  publishedAt  DateTime      @default(now())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+}

@@ -1,0 +1,18 @@
+# dependencies and generated output
+node_modules/
+.next/
+out/
+
+# local configuration and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# local demo data (will be generated automatically)
+.data/
+
+# system and editor files
+.DS_Store
+*.log
+.vscode/

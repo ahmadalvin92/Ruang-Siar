@@ -1,0 +1,283 @@
+import { Broadcast, News } from '@/types';
+
+export const initialBroadcasts: Broadcast[] = [
+  {
+    id: 'broadcast-1',
+    title: 'Ruang Siar Pagi: Gelombang Pagi & Irama Nuswantara',
+    slug: 'ruang-siar-pagi',
+    description: 'Siaran pagi menyambut hari, mengulas rangkuman kabar terkini, seruput kopi hangat, dan alunan playlist kurasi lagu santai Indonesia untuk menyemangati aktivitas Anda.',
+    youtubePlaylistUrl: 'https://www.youtube.com/playlist?list=PL4fGSI1pDJn5kI81J1S69zEWmRM7uoxh2',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop',
+    category: 'Siaran Pagi',
+    duration: '15 Menit',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Pengantar Siaran Pagi & Sapaan Hangat',
+        artistOrSpeaker: 'Penyiar: Bang Rey (Studio Rekaman)',
+        type: 'siaran',
+      },
+      {
+        time: '01:10',
+        title: 'Lagu Pembuka: Dan...',
+        artistOrSpeaker: 'Sheila on 7',
+        type: 'lagu',
+      },
+      {
+        time: '05:40',
+        title: 'Selingan: Info Cuaca & Semangat Hari Ini',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '06:30',
+        title: 'Lagu Pilihan: Akad',
+        artistOrSpeaker: 'Payung Teduh',
+        type: 'lagu',
+      },
+      {
+        time: '11:00',
+        title: 'Lagu Penutup: Rehat',
+        artistOrSpeaker: 'Kunto Aji',
+        type: 'lagu',
+      },
+      {
+        time: '14:40',
+        title: 'Penutup Siaran & Ucapan Selamat Beraktivitas',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+    ],
+  },
+  {
+    id: 'broadcast-2',
+    title: 'Ruang Siar Siang: Resonansi Kreatif & Diskusi Hangat',
+    slug: 'ruang-siar-siang',
+    description: 'Menemani jeda istirahat siang dengan perbincangan seputar industri kreatif, inovasi kreator muda, serta playlist musik berenergi penambah semangat produktif.',
+    youtubePlaylistUrl: 'https://www.youtube.com/playlist?list=PL4fGSI1pDJn5kI81J1S69zEWmRM7uoxh2',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=1200&auto=format&fit=crop',
+    category: 'Siaran Siang',
+    duration: '15 Menit',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 28).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Pengantar Jeda Siang & Inspirasi Kreatif',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '01:15',
+        title: 'Lagu: Zona Nyaman',
+        artistOrSpeaker: 'Fourtwnty',
+        type: 'lagu',
+      },
+      {
+        time: '05:30',
+        title: 'Selingan: Kabar Kreator & Inovasi Lokal',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '06:15',
+        title: 'Lagu: Jakarta Hari Ini',
+        artistOrSpeaker: 'For Revenge ft. Stereo Wall',
+        type: 'lagu',
+      },
+      {
+        time: '10:45',
+        title: 'Lagu: Secukupnya',
+        artistOrSpeaker: 'Hindia',
+        type: 'lagu',
+      },
+    ],
+  },
+  {
+    id: 'broadcast-3',
+    title: 'Ruang Siar Sore: Senja Kota & Melodi Akustik',
+    slug: 'ruang-siar-sore',
+    description: 'Menjelang senja di tengah dinamika jalanan kota. Ditemani obrolan santai penyiar, kabar lalu lintas kultural, dan lantunan melodi akustik yang meneduhkan pikiran.',
+    youtubePlaylistUrl: 'https://www.youtube.com/playlist?list=PL4fGSI1pDJn5kI81J1S69zEWmRM7uoxh2',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop',
+    category: 'Siaran Sore',
+    duration: '15 Menit',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 50).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Sapaan Senja: Menemani Perjalanan Pulang',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '01:05',
+        title: 'Lagu: Untuk Perempuan Yang Sedang Di Pelukan',
+        artistOrSpeaker: 'Payung Teduh',
+        type: 'lagu',
+      },
+      {
+        time: '05:20',
+        title: 'Catatan Senja & Arus Pulang',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '06:10',
+        title: 'Lagu: Dialog Hujan',
+        artistOrSpeaker: 'Senar Senja',
+        type: 'lagu',
+      },
+      {
+        time: '10:30',
+        title: 'Lagu: Kembara Senja',
+        artistOrSpeaker: 'Nadin Amizah',
+        type: 'lagu',
+      },
+    ],
+  },
+  {
+    id: 'broadcast-4',
+    title: 'Ruang Siar Malam: Nada Hening & Catatan Kontemplasi',
+    slug: 'ruang-siar-malam',
+    description: 'Kala malam merekah hening, nikmati kurasi ambient, lo-fi nusantara, dan esai narasi suara mengenai perjalanan hidup dan sudut-sudut kota yang puitis.',
+    youtubePlaylistUrl: 'https://www.youtube.com/playlist?list=PL4fGSI1pDJn5kI81J1S69zEWmRM7uoxh2',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200&auto=format&fit=crop',
+    category: 'Siaran Malam',
+    duration: '15 Menit',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 75).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Refleksi Malam & Monolog Santai',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '01:20',
+        title: 'Lagu: Beranjak Dewasa',
+        artistOrSpeaker: 'Nadin Amizah',
+        type: 'lagu',
+      },
+      {
+        time: '05:40',
+        title: 'Esai Suara: Sudut Kota Kala Hening',
+        artistOrSpeaker: 'Penyiar: Bang Rey',
+        type: 'siaran',
+      },
+      {
+        time: '06:30',
+        title: 'Lagu: Mengheningkan Cipta',
+        artistOrSpeaker: 'Efek Rumah Kaca',
+        type: 'lagu',
+      },
+    ],
+  },
+  {
+    id: 'broadcast-5',
+    title: 'Edisi Khusus: Dialog Musisi Independen Era Digital',
+    slug: 'edisi-khusus-dialog-musisi-independen',
+    description: 'Wawancara mendalam bersama pegiat band independen mengenai proses produksi rekaman mandiri, kurasi playlist digital, dan ekosistem panggung pertunjukan.',
+    youtubePlaylistUrl: 'https://www.youtube.com/playlist?list=PL4fGSI1pDJn5kI81J1S69zEWmRM7uoxh2',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=1200&auto=format&fit=crop',
+    category: 'Wawancara',
+    duration: '20 Menit',
+    status: 'Draft',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 100).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
+    rundown: [
+      {
+        time: '00:00',
+        title: 'Pembuka & Perkenalan Musisi Tamu',
+        artistOrSpeaker: 'Host: Bang Rey & Sigit',
+        type: 'siaran',
+      },
+      {
+        time: '02:00',
+        title: 'Diskusi: Distribusi Mandiri Era Streaming',
+        artistOrSpeaker: 'Bincang Studio',
+        type: 'siaran',
+      },
+    ],
+  },
+];
+
+export const initialNews: News[] = [
+  {
+    id: 'news-1',
+    title: 'Peta Baru Musik Digital Indonesia: Musisi Lokal Kian Berjaya di Ranah Streaming',
+    slug: 'peta-baru-musik-digital-indonesia',
+    category: 'Kabar Musik',
+    excerpt: 'Riset terbaru menunjukkan peningkatan signifikan jumlah pendengar lagu berbahasa daerah dan pop alternatif lokal sepanjang kuartal pertama tahun ini.',
+    content: `Industri musik Indonesia mencatatkan babak baru yang menggembirakan. Data konsumsi musik digital memperlihatkan bahwa pendengar domestik semakin mencintai karya musisi tanah air, dari genre pop folk, shoegaze, hingga neo-tradisional nusantara.
+
+Di Ruang Siar, komitmen kami adalah menghadirkan kurasi siaran yang menjembatani para pendengar dengan karya-karya bermakna ini. Lewat format siaran berbalut playlist YouTube, interaksi antara penuturan kisah penyiar dan harmoni audio menjadi pengalaman audio-visual yang utuh.
+
+"Pendengar masa kini tidak hanya mencari nada yang enak didengar, tetapi juga narasi di balik lagu tersebut," ungkap kurator musik Ruang Siar dalam sesi diskusi editorial pekan lalu.`,
+    thumbnailUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200&auto=format&fit=crop',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 10).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
+  },
+  {
+    id: 'news-2',
+    title: 'Transformasi Format Radio Kontemporer: Saat Suara Penyiar Berpadu Kurasi Visual',
+    slug: 'transformasi-format-radio-kontemporer',
+    category: 'Media & Tren',
+    excerpt: 'Bagaimana pendekatan media berbasis playlist mengubah cara masyarakat urban menikmati siaran tematik tanpa terikat frekuensi gelombang konvensional.',
+    content: `Pergeseran kebiasaan menyimak siaran audio tidak mematikan pesona radio, melainkan memperkayanya. Dengan memanfaatkan playlist resmi platform video, penyiar kini memiliki kanvas yang lebih dinamis untuk bercerita.
+
+Melalui arsitektur Ruang Siar, pengelola siaran hanya perlu menautkan tautan playlist YouTube dan menyusun catatan konteks siaran. Penikmat siaran langsung disuguhi tampilan elegan beresolusi tinggi, navigasi daftar lagu yang transparan, dan jaminan kepatuhan terhadap hak cipta karena menggunakan mekanisme sematan resmi.
+
+Langkah ini diapresiasi oleh banyak kalangan kreator karena memberikan fleksibilitas tanpa mengorbankan kualitas audio visual.`,
+    thumbnailUrl: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=1200&auto=format&fit=crop',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 20).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 20).toISOString(),
+  },
+  {
+    id: 'news-3',
+    title: 'Festival Bunyi Nusantara 2026: Merayakan Harmoni Tradisi & Bunyi Modern',
+    slug: 'festival-bunyi-nusantara-2026',
+    category: 'Budaya & Seni',
+    excerpt: 'Eksplorasi estetika bunyi alat musik tradisional yang disilangkan dengan synthesizer dan ambient soundscapes memikat ribuan apresiator.',
+    content: `Gelaran tahunan Festival Bunyi Nusantara kembali memukau publik dengan panggung terbuka yang memadukan gamelan slendro, sasando, serta modulasi synthesizer modern.
+
+Acara yang berlangsung selama tiga malam ini menjadi bukti nyata bahwa musik tradisi memiliki elastisitas luar biasa untuk berkembang tanpa kehilangan jiwanya. Seluruh dokumentasi siaran dan kurasi lagu pilihan dari festival ini kini dapat disimak eksklusif di rubrik siaran tematik Ruang Siar.`,
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 40).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
+  },
+  {
+    id: 'news-4',
+    title: 'Kiat Membangun Ruang Siar Mandiri: Setup Minimalis Hasil Maksimal',
+    slug: 'kiat-membangun-ruang-siar-mandiri',
+    category: 'Teknologi',
+    excerpt: 'Panduan teknis dan editorial bagi komunitas yang ingin memulai siaran digital dengan piranti sederhana dan alur produksi efisien.',
+    content: `Memulai kanal siaran audio tidak lagi membutuhkan ruangan kedap suara berbiaya puluhan juta. Dengan mikrofon dinamis USB berkualitas, penataan refleksi suara sederhana menggunakan perabot rumah, dan kurasi playlist yang rapi, siapa pun dapat memulai siaran yang terdengar profesional.
+
+Artikel panduan ini mengulas langkah demi langkah: mulai dari pemilihan gain mikrofon, teknik intonasi penyiaran santai, hingga cara menyusun playlist yang mengalir secara emosional dari lagu pembuka hingga penutup.`,
+    thumbnailUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop',
+    status: 'Published',
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 60).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 65).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 60).toISOString(),
+  },
+];
