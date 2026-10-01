@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Radio, Mail, MapPin, ExternalLink, Disc3, Zap, Heart } from 'lucide-react';
+import Image from 'next/image';
 import { YoutubeIcon, InstagramIcon, TwitterIcon } from '@/components/icons';
-import LogoMark from './LogoMark';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -21,11 +21,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-5">
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <LogoMark className="w-12 h-12 rounded-xl shadow-lg shadow-black/30 group-hover:scale-105 transition-transform" />
-              <div className="flex items-baseline">
-                <span className="text-xl font-black tracking-tight text-white group-hover:text-amber-400 transition-colors">Ruang Siar</span>
-              </div>
+            <Link href="/" className="inline-block group focus:outline-none">
+              <Image
+                src="/brand/ruang-siar-logo.png"
+                alt="Ruang Siar — Ada Untuk Anda"
+                width={175}
+                height={41}
+                className="h-10 w-auto object-contain transition-all duration-300 group-hover:opacity-90 group-hover:scale-[1.02]"
+              />
             </Link>
 
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">

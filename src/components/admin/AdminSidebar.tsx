@@ -14,7 +14,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import LogoMark from '@/components/LogoMark';
+import Image from 'next/image';
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -56,13 +56,19 @@ export default function AdminSidebar() {
     <aside className="w-64 shrink-0 border-r border-slate-800/80 bg-slate-950/90 flex flex-col justify-between h-screen sticky top-0">
       <div className="p-6">
         {/* Brand */}
-        <div className="flex items-center gap-3 mb-8">
-          <LogoMark className="w-10 h-10 rounded-xl shadow-md shadow-black/30" />
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-base font-black tracking-wider text-white">RUANG SIAR</span>
-            </div>
-            <span className="text-[11px] text-amber-400 font-semibold tracking-wide uppercase flex items-center gap-1">
+        <div className="mb-8">
+          <Link href="/" className="block group focus:outline-none">
+            <Image
+              src="/brand/ruang-siar-logo.png"
+              alt="Ruang Siar"
+              width={160}
+              height={38}
+              priority
+              className="h-8 w-auto object-contain transition-opacity group-hover:opacity-90"
+            />
+          </Link>
+          <div className="mt-3">
+            <span className="text-[10px] text-amber-400 font-bold tracking-wider uppercase inline-flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
               <ShieldCheck className="w-3 h-3" /> Panel Kurator
             </span>
           </div>

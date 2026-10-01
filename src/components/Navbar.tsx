@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { Radio, Menu, X } from 'lucide-react';
-import LogoMark from './LogoMark';
 
 const EqualiserIcon = () => (
   <div className="equalizer">
@@ -40,20 +40,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[68px]">
           {/* Logo & Brand */}
-          <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-            <LogoMark className="w-12 h-12 rounded-xl shadow-lg shadow-black/40 group-hover:scale-105 transition-all duration-300" priority />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <div className="flex items-baseline">
-                  <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-amber-400 transition-colors">Ruang Siar</span>
-                </div>
-                <div className="hidden sm:flex">
-                  <EqualiserIcon />
-                </div>
-              </div>
-              <span className="text-[10px] text-slate-500 font-medium tracking-wider uppercase hidden sm:inline-block">
-                Radio & Media Audio-Visual
-              </span>
+          <Link href="/" className="flex items-center gap-3 group focus:outline-none py-1">
+            <Image
+              src="/brand/ruang-siar-logo.png"
+              alt="Ruang Siar — Ada Untuk Anda"
+              width={165}
+              height={39}
+              priority
+              className="h-9 sm:h-10 w-auto object-contain transition-all duration-300 group-hover:opacity-90 group-hover:scale-[1.02]"
+            />
+            <div className="hidden sm:flex items-center">
+              <EqualiserIcon />
             </div>
           </Link>
 

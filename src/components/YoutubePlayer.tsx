@@ -67,8 +67,8 @@ export default function YoutubePlayer({
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-          <LogoMark className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl shadow-2xl" priority />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
+          <LogoMark className="w-52 sm:w-72 h-auto drop-shadow-2xl" priority />
           <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-amber-500 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 group-hover:bg-amber-400 group-hover:scale-105 transition-all">
             <Play className="w-4 h-4 fill-current" /> Putar Siaran
           </span>
