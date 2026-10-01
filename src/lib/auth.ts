@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation';
 export const ADMIN_SESSION_COOKIE = 'ruang_siar_admin_session';
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
-const adminUsername = () => process.env.ADMIN_USERNAME || 'admin';
-const adminPassword = () => process.env.ADMIN_PASSWORD || 'admin';
+const adminUsername = () => process.env.ADMIN_USERNAME || 'sigit_kurniawan';
+const adminPassword = () => process.env.ADMIN_PASSWORD || 'Sigitjames@1969';
 const sessionSecret = () =>
   process.env.ADMIN_SESSION_SECRET || 'ganti-rahasia-ini-sebelum-produksi';
 

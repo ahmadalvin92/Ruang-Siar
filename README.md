@@ -171,8 +171,8 @@ Setelah keluar tulisan `Ready in ...ms`, buka browser (Chrome, Edge, atau Safari
 - 🎛️ **Halaman Dashboard CMS:** [http://localhost:3000/admin](http://localhost:3000/admin)
 
 > **Akun Login Bawaan (Default):**
-> - **Username:** `admin`
-> - **Password:** `admin`
+> - **Username:** `sigit_kurniawan`
+> - **Password:** `Sigitjames@1969`
 
 *(Untuk mematikan website, kembali ke jendela Terminal/CMD lalu tekan kombinasi tombol keyboard `Ctrl` + `C`).*
 
