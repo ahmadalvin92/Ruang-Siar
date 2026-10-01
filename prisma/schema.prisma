@@ -1,12 +1,12 @@
 // Prisma schema for Ruang Siar
-// PostgreSQL-ready database schema
+// MySQL cPanel database schema
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,12 +20,12 @@ model Broadcast {
   id                 String        @id @default(cuid())
   title              String
   slug               String        @unique
-  description        String
-  youtubePlaylistUrl String
-  thumbnailUrl       String?
+  description        String        @db.Text
+  youtubePlaylistUrl String        @db.Text
+  thumbnailUrl       String?       @db.Text
   category           String        @default("Umum")
   duration           String?
-  rundown            String?       // JSON stringified RundownItem array (timestamps & tracklist)
+  rundown            String?       @db.Text // JSON stringified RundownItem array (timestamps & tracklist)
   status             ContentStatus @default(PUBLISHED)
   publishedAt        DateTime      @default(now())
   createdAt          DateTime      @default(now())
@@ -39,9 +39,9 @@ model News {
   id           String        @id @default(cuid())
   title        String
   slug         String        @unique
-  excerpt      String
-  content      String
-  thumbnailUrl String?
+  excerpt      String        @db.Text
+  content      String        @db.LongText
+  thumbnailUrl String?       @db.Text
   category     String        @default("Berita")
   status       ContentStatus @default(PUBLISHED)
   publishedAt  DateTime      @default(now())
@@ -52,3 +52,4 @@ model News {
   @@index([status])
   @@index([category])
 }
+

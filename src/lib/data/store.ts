@@ -2,6 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import { Broadcast, News, BroadcastFormData, NewsFormData, ContentStatus, RundownItem } from '@/types';
 import { initialBroadcasts, initialNews } from './initialData';
+import {
+  isMysqlConfigured,
+  mysqlGetBroadcasts,
+  mysqlGetBroadcastBySlug,
+  mysqlGetBroadcastById,
+  mysqlInsertBroadcast,
+  mysqlUpdateBroadcast,
+  mysqlDeleteBroadcast,
+  mysqlGetNews,
+  mysqlGetNewsBySlug,
+  mysqlGetNewsById,
+  mysqlInsertNews,
+  mysqlUpdateNews,
+  mysqlDeleteNews,
+} from './mysql';
 
 interface DbSchema {
   broadcasts: Broadcast[];
@@ -69,6 +84,14 @@ export async function getBroadcasts(options?: {
   category?: string;
   limit?: number;
 }): Promise<Broadcast[]> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetBroadcasts(options);
+    } catch (err) {
+      console.warn('MySQL getBroadcasts failed, falling back to local store:', err);
+    }
+  }
+
   const db = ensureDb();
   let list = [...db.broadcasts];
 
@@ -101,16 +124,31 @@ export async function getBroadcasts(options?: {
 }
 
 export async function getBroadcastBySlug(slug: string): Promise<Broadcast | null> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetBroadcastBySlug(slug);
+    } catch (err) {
+      console.warn('MySQL getBroadcastBySlug failed, falling back to local store:', err);
+    }
+  }
   const db = ensureDb();
   const found = db.broadcasts.find((b) => b.slug === slug);
   return found || null;
 }
 
 export async function getBroadcastById(id: string): Promise<Broadcast | null> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetBroadcastById(id);
+    } catch (err) {
+      console.warn('MySQL getBroadcastById failed, falling back to local store:', err);
+    }
+  }
   const db = ensureDb();
   const found = db.broadcasts.find((b) => b.id === id);
   return found || null;
 }
+
 
 function parseRundownText(text?: string): RundownItem[] {
   if (!text || !text.trim()) return [];
@@ -200,6 +238,14 @@ export async function createBroadcast(data: BroadcastFormData): Promise<Broadcas
     updatedAt: now,
   };
 
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlInsertBroadcast(newBroadcast);
+    } catch (err) {
+      console.warn('MySQL insertBroadcast failed, writing to local fallback:', err);
+    }
+  }
+
   db.broadcasts.unshift(newBroadcast);
   saveDb(db);
   return newBroadcast;
@@ -249,12 +295,28 @@ export async function updateBroadcast(
     updatedAt: now,
   };
 
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlUpdateBroadcast(updated);
+    } catch (err) {
+      console.warn('MySQL updateBroadcast failed, writing to local fallback:', err);
+    }
+  }
+
   db.broadcasts[index] = updated;
   saveDb(db);
   return updated;
 }
 
 export async function deleteBroadcast(id: string): Promise<boolean> {
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlDeleteBroadcast(id);
+    } catch (err) {
+      console.warn('MySQL deleteBroadcast failed:', err);
+    }
+  }
+
   const db = ensureDb();
   const initialLength = db.broadcasts.length;
   db.broadcasts = db.broadcasts.filter((b) => b.id !== id);
@@ -273,6 +335,14 @@ export async function getNewsList(options?: {
   category?: string;
   limit?: number;
 }): Promise<News[]> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetNews(options);
+    } catch (err) {
+      console.warn('MySQL getNews failed, falling back to local store:', err);
+    }
+  }
+
   const db = ensureDb();
   let list = [...db.news];
 
@@ -306,12 +376,28 @@ export async function getNewsList(options?: {
 }
 
 export async function getNewsBySlug(slug: string): Promise<News | null> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetNewsBySlug(slug);
+    } catch (err) {
+      console.warn('MySQL getNewsBySlug failed, falling back to local store:', err);
+    }
+  }
+
   const db = ensureDb();
   const found = db.news.find((n) => n.slug === slug);
   return found || null;
 }
 
 export async function getNewsById(id: string): Promise<News | null> {
+  if (isMysqlConfigured()) {
+    try {
+      return await mysqlGetNewsById(id);
+    } catch (err) {
+      console.warn('MySQL getNewsById failed, falling back to local store:', err);
+    }
+  }
+
   const db = ensureDb();
   const found = db.news.find((n) => n.id === id);
   return found || null;
@@ -344,6 +430,14 @@ export async function createNews(data: NewsFormData): Promise<News> {
     createdAt: now,
     updatedAt: now,
   };
+
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlInsertNews(newItem);
+    } catch (err) {
+      console.warn('MySQL insertNews failed, writing to local fallback:', err);
+    }
+  }
 
   db.news.unshift(newItem);
   saveDb(db);
@@ -385,12 +479,28 @@ export async function updateNews(
     updatedAt: now,
   };
 
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlUpdateNews(updated);
+    } catch (err) {
+      console.warn('MySQL updateNews failed, writing to local fallback:', err);
+    }
+  }
+
   db.news[index] = updated;
   saveDb(db);
   return updated;
 }
 
 export async function deleteNews(id: string): Promise<boolean> {
+  if (isMysqlConfigured()) {
+    try {
+      await mysqlDeleteNews(id);
+    } catch (err) {
+      console.warn('MySQL deleteNews failed:', err);
+    }
+  }
+
   const db = ensureDb();
   const initialLength = db.news.length;
   db.news = db.news.filter((n) => n.id !== id);
@@ -400,6 +510,7 @@ export async function deleteNews(id: string): Promise<boolean> {
   }
   return false;
 }
+
 
 /* ================== DASHBOARD METRICS ================== */
 
