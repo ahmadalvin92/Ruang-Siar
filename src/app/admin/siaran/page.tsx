@@ -6,7 +6,7 @@ import BroadcastTableClient from '@/components/admin/BroadcastTableClient';
 export const revalidate = 0;
 
 export default async function AdminBroadcastsPage() {
-  const broadcasts = await getBroadcasts();
+  const broadcasts = await getBroadcasts({ includeFuture: true });
 
   return (
     <div className="flex-1 pb-16">

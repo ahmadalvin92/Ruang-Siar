@@ -645,8 +645,8 @@ export async function deleteNews(id: string): Promise<boolean> {
 /* ================== DASHBOARD METRICS ================== */
 
 export async function getDashboardStats() {
-  const allBroadcasts = await getBroadcasts();
-  const allNews = await getNewsList();
+  const allBroadcasts = await getBroadcasts({ includeFuture: true });
+  const allNews = await getNewsList({ includeFuture: true });
 
   const activeBroadcasts = allBroadcasts.filter((b) => b.status !== 'Archived');
   const totalBroadcasts = activeBroadcasts.length;

@@ -8,8 +8,8 @@ import { Archive, Radio, Newspaper } from 'lucide-react';
 export const revalidate = 0;
 
 export default async function AdminRecycleBinPage() {
-  const allBroadcasts = await getBroadcasts();
-  const allNews = await getNewsList();
+  const allBroadcasts = await getBroadcasts({ includeFuture: true });
+  const allNews = await getNewsList({ includeFuture: true });
 
   const archivedBroadcasts = allBroadcasts.filter((b) => b.status === 'Archived');
   const archivedNews = allNews.filter((n) => n.status === 'Archived');

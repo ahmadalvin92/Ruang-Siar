@@ -6,7 +6,7 @@ import NewsTableClient from '@/components/admin/NewsTableClient';
 export const revalidate = 0;
 
 export default async function AdminNewsPage() {
-  const newsList = await getNewsList();
+  const newsList = await getNewsList({ includeFuture: true });
 
   return (
     <div className="flex-1 pb-16">
