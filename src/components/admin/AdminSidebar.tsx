@@ -12,6 +12,10 @@ import {
   Sparkles,
   ShieldCheck,
   LogOut,
+  Settings,
+  Archive,
+  Bot,
+  Mail,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -43,6 +47,25 @@ export default function AdminSidebar() {
       name: 'Kelola Berita',
       href: '/admin/berita',
       icon: Newspaper,
+      exact: false,
+    },
+    {
+      name: 'Pengaturan & AdSense',
+      href: '/admin/pengaturan',
+      icon: Settings,
+      exact: false,
+    },
+    {
+      name: 'Webmail Redaksi',
+      href: 'https://ruangsiar.id:2096',
+      icon: Mail,
+      exact: false,
+      external: true,
+    },
+    {
+      name: 'Tempat Sampah',
+      href: '/admin/sampah',
+      icon: Archive,
       exact: false,
     },
   ];
@@ -99,7 +122,27 @@ export default function AdminSidebar() {
           </div>
           {links.map((link) => {
             const Icon = link.icon;
-            const active = isActive(link.href, link.exact);
+            const active = !link.external && isActive(link.href, link.exact);
+
+            if (link.external) {
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-amber-400 hover:bg-slate-900 transition-all duration-200 group"
+                  title="Buka Webmail Resmi Ruang Siar di Tab Baru"
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-amber-500/80 group-hover:text-amber-400 transition-colors" />
+                    <span>{link.name}</span>
+                  </div>
+                  <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                </a>
+              );
+            }
+
             return (
               <Link
                 key={link.href}

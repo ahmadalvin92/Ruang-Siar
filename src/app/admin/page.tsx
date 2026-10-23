@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { getDashboardStats } from '@/lib/data/store';
+import { getAnalyticsSummary } from '@/lib/analytics';
+import AnalyticsDashboardWidget from '@/components/admin/AnalyticsDashboardWidget';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { formatDateIndonesian } from '@/lib/utils';
+import { formatDateTimeIndonesian } from '@/lib/utils';
 import { YoutubeIcon } from '@/components/icons';
 import {
   Radio,
@@ -15,12 +17,16 @@ import {
   Edit,
   ShieldCheck,
   Eye,
+  Archive,
 } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function AdminDashboardPage() {
-  const stats = await getDashboardStats();
+  const [stats, analytics] = await Promise.all([
+    getDashboardStats(),
+    getAnalyticsSummary().catch(() => undefined),
+  ]);
 
   return (
     <div className="flex-1 pb-16">
@@ -85,22 +91,30 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Card 4: Status Database */}
-          <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-emerald-500/40 transition-colors">
+          {/* Card 4: Tempat Sampah (Recycle Bin) */}
+          <Link
+            href="/admin/sampah"
+            className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-red-500/40 transition-colors block group"
+          >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-slate-400">Arsitektur DB</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4" />
+              <span className="text-xs font-semibold text-slate-400">Tempat Sampah</span>
+              <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Archive className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-xl font-bold text-emerald-400 mb-1">
-              PostgreSQL Ready
+            <div className="text-3xl font-black text-white mb-1">
+              {(stats.archivedBroadcasts || 0) + (stats.archivedNews || 0)}
             </div>
-            <div className="text-xs text-slate-400">
-              Prisma ORM schema loaded
+            <div className="text-xs text-slate-400 flex items-center gap-1.5">
+              <span>{stats.archivedBroadcasts || 0} Siaran</span>
+              <span>•</span>
+              <span>{stats.archivedNews || 0} Berita</span>
             </div>
-          </div>
+          </Link>
         </div>
+
+        {/* Live Audience & Visitor Analytics Widget */}
+        <AnalyticsDashboardWidget initialData={analytics} />
 
         {/* Action Banner */}
         <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -177,8 +191,8 @@ export default async function AdminDashboardPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-slate-400">{b.duration || '-'}</td>
-                      <td className="px-5 py-3.5 text-slate-400">
-                        {formatDateIndonesian(b.publishedAt)}
+                      <td className="px-5 py-3.5 text-slate-400 text-xs font-mono">
+                        {formatDateTimeIndonesian(b.publishedAt)}
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="inline-flex items-center gap-2">
@@ -254,8 +268,8 @@ export default async function AdminDashboardPage() {
                           {n.status}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5 text-slate-400">
-                        {formatDateIndonesian(n.publishedAt)}
+                      <td className="px-5 py-3.5 text-slate-400 text-xs font-mono">
+                        {formatDateTimeIndonesian(n.publishedAt)}
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="inline-flex items-center gap-2">

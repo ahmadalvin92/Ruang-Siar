@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Broadcast, News, BroadcastFormData, NewsFormData, ContentStatus, RundownItem } from '@/types';
+import { Broadcast, News, BroadcastFormData, NewsFormData, ContentStatus, RundownItem, SiteSettings } from '@/types';
 import { initialBroadcasts, initialNews } from './initialData';
 import {
   isMysqlConfigured,
@@ -18,9 +18,64 @@ import {
   mysqlDeleteNews,
 } from './mysql';
 
+export const defaultSettings: SiteSettings = {
+  siteName: 'Ruang Siar',
+  siteTagline: 'Media & Radio Siar Kontemporer Indonesia',
+  siteDescription: 'Platform radio siar kontemporer Indonesia. Suara hangat penyiar berpadu kurasi playlist resmi YouTube — pengalaman audio-visual yang menginspirasi setiap hari.',
+  instagramUrl: 'https://instagram.com/ruangsiar.id',
+  youtubeUrl: 'https://youtube.com/@ruangsiar',
+  twitterUrl: 'https://x.com/ruangsiar',
+  contactEmail: 'redaksi@ruangsiar.id',
+  contactLocation: 'Jakarta Selatan, Indonesia',
+  activeStatusText: 'Siaran Aktif — 24 Jam',
+  schedules: [
+    { time: '06:00 – 09:00', name: 'Pagi', color: 'text-amber-400' },
+    { time: '12:00 – 14:00', name: 'Siang', color: 'text-orange-400' },
+    { time: '16:30 – 19:00', name: 'Sore', color: 'text-rose-400' },
+    { time: '21:00 – 23:00', name: 'Malam', color: 'text-purple-400' },
+    { time: 'Khusus', name: 'Wawancara & Eksklusif', color: 'text-sky-400' },
+  ],
+  adSensePublisherId: 'ca-pub-5854985607866680',
+  adSenseSlotLeaderboard: '',
+  adSenseSlotRectangle: '',
+  adSenseEnabled: true,
+  googleAnalyticsId: '',
+  whatsappNumber: '+62 896-3017-2935',
+  statsListeners: '10K+',
+  statsCuratedSongs: '500+',
+  conceptHeading: 'Harmonisasi Narasi Suara & Playlist YouTube Resmi',
+  conceptDescription: 'Ruang Siar menyajikan format penyiaran modern — broadcaster meramu narasi dan kabar terkini, sementara alunan musik dinikmati via pemutar sematan resmi YouTube. Bersih dari unduhan ilegal, menghormati hak cipta musisi.',
+  aboutBadge: 'Filosofi & Visi Platform',
+  aboutHeading: 'Mendefinisikan Ulang Pengalaman Radio Siar di Era Digital',
+  aboutParagraph1: 'Ruang Siar lahir dari kerinduan akan kehangatan suara penyiar radio yang dipadukan secara elegan dengan katalog musik tak terbatas dari YouTube resmi.',
+  aboutParagraph2: 'Kami menyajikan format penyiaran modern — broadcaster meramu narasi dan kabar terkini, sementara alunan musik dinikmati via pemutar sematan resmi YouTube. Bersih dari unduhan ilegal, menghormati hak cipta musisi.',
+  aboutPrinciples: [
+    { title: 'Narasi Bermakna', desc: 'Penyiar memandu pendengar dengan kabar terkini, obrolan hangat, dan konteks cerita di balik setiap pemilihan lagu.' },
+    { title: '100% Pemutar Resmi', desc: 'Tidak ada pengunduhan file, konversi suara, atau re-hosting data. Semua lagu disajikan via pemutar sematan resmi YouTube.' },
+    { title: 'Hormati Hak Cipta', desc: 'Setiap kali pemutar diputar, metrik tontonan dan royalti langsung tercatat resmi bagi sang musisi di kanal aslinya.' },
+  ],
+  aboutStepsHeading: 'Bagaimana Ruang Siar Bekerja?',
+  aboutSteps: [
+    { title: '1. Kurasi Playlist', desc: 'Broadcaster atau kurator menyiapkan playlist lagu tematik di YouTube yang cocok dengan tema siaran.' },
+    { title: '2. Input Melalui CMS', desc: 'Melalui portal admin Ruang Siar, pengelola cukup memasukkan tautan playlist YouTube, judul siaran, serta catatan penyiaran.' },
+    { title: '3. Tampilan Audio-Visual Mewah', desc: 'Website otomatis mengekstrak identifier pemutar, menampilkan pemutar 16:9 responsif berkelas, dan menyajikannya secara mulus kepada seluruh pendengar.' },
+  ],
+  aboutCtaHeading: 'Siap mendengarkan program siaran hari ini?',
+  redaksiTitle: 'Susunan Dewan Redaksi & Tim Ruang Siar',
+  redaksiDescription: 'Ruang Siar dikelola oleh tim kurator, penyiar, dan jurnalis audio-visual yang berdedikasi menghadirkan jurnalisme musik dan penyiaran berintegritas.',
+  redaksiMembers: [
+    { role: 'Pemimpin Umum / Penanggung Jawab', name: 'Sigit' },
+    { role: 'Pemimpin Redaksi', name: 'Alvin' },
+    { role: 'Redaktur Pelaksana', name: 'Tim Editorial Ruang Siar' },
+    { role: 'Kurator Musik & Broadcaster', name: 'Sigit & Rekan' },
+    { role: 'Reporter & Kontributor Lapangan', name: 'Traffic Crew & Komunitas' },
+  ],
+};
+
 interface DbSchema {
   broadcasts: Broadcast[];
   news: News[];
+  settings?: SiteSettings;
 }
 
 const DATA_DIR = path.join(process.cwd(), '.data');
@@ -48,6 +103,7 @@ function ensureDb(): DbSchema {
       const initial: DbSchema = {
         broadcasts: initialBroadcasts,
         news: initialNews,
+        settings: defaultSettings,
       };
       fs.writeFileSync(DB_FILE, JSON.stringify(initial, null, 2), 'utf-8');
       return initial;
@@ -55,12 +111,17 @@ function ensureDb(): DbSchema {
 
     const content = fs.readFileSync(DB_FILE, 'utf-8');
     const parsed = JSON.parse(content) as DbSchema;
+    if (!parsed.settings) {
+      parsed.settings = defaultSettings;
+      saveDb(parsed);
+    }
     return parsed;
   } catch (error) {
     console.error('Error accessing local db.json, falling back to initial data:', error);
     return {
       broadcasts: initialBroadcasts,
       news: initialNews,
+      settings: defaultSettings,
     };
   }
 }
@@ -83,6 +144,7 @@ export async function getBroadcasts(options?: {
   search?: string;
   category?: string;
   limit?: number;
+  includeFuture?: boolean;
 }): Promise<Broadcast[]> {
   if (isMysqlConfigured()) {
     try {
@@ -96,7 +158,15 @@ export async function getBroadcasts(options?: {
   let list = [...db.broadcasts];
 
   if (options?.status) {
-    list = list.filter((b) => b.status === options.status);
+    if (options.status === 'Published' && !options?.includeFuture) {
+      const now = Date.now();
+      list = list.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
+    } else {
+      list = list.filter((b) => b.status === options.status);
+    }
+  } else if (!options?.includeFuture) {
+    const now = Date.now();
+    list = list.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
   }
 
   if (options?.category && options.category !== 'Semua') {
@@ -123,29 +193,44 @@ export async function getBroadcasts(options?: {
   return list;
 }
 
-export async function getBroadcastBySlug(slug: string): Promise<Broadcast | null> {
+export async function getBroadcastBySlug(slug: string, options?: { allowFuture?: boolean }): Promise<Broadcast | null> {
+  let item: Broadcast | null = null;
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetBroadcastBySlug(slug);
+      item = await mysqlGetBroadcastBySlug(slug);
+      if (!item) item = await mysqlGetBroadcastById(slug);
     } catch (err) {
       console.warn('MySQL getBroadcastBySlug failed, falling back to local store:', err);
     }
   }
-  const db = ensureDb();
-  const found = db.broadcasts.find((b) => b.slug === slug);
-  return found || null;
+  if (!item) {
+    const db = ensureDb();
+    item = db.broadcasts.find((b) => b.slug === slug || b.id === slug) || null;
+  }
+
+  if (item && !options?.allowFuture && item.status === 'Published') {
+    if (new Date(item.publishedAt).getTime() > Date.now()) {
+      return null;
+    }
+  }
+
+  return item;
 }
 
 export async function getBroadcastById(id: string): Promise<Broadcast | null> {
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetBroadcastById(id);
+      const item = await mysqlGetBroadcastById(id);
+      if (item) return item;
+      // Also try matching by slug in case slug was passed as id in the URL!
+      const bySlug = await mysqlGetBroadcastBySlug(id);
+      if (bySlug) return bySlug;
     } catch (err) {
       console.warn('MySQL getBroadcastById failed, falling back to local store:', err);
     }
   }
   const db = ensureDb();
-  const found = db.broadcasts.find((b) => b.id === id);
+  const found = db.broadcasts.find((b) => b.id === id || b.slug === id);
   return found || null;
 }
 
@@ -255,11 +340,10 @@ export async function updateBroadcast(
   id: string,
   data: Partial<BroadcastFormData>
 ): Promise<Broadcast | null> {
-  const db = ensureDb();
-  const index = db.broadcasts.findIndex((b) => b.id === id);
-  if (index === -1) return null;
+  const existing = await getBroadcastById(id);
+  if (!existing) return null;
 
-  const existing = db.broadcasts[index];
+  const db = ensureDb();
   const now = new Date().toISOString();
 
   let updatedSlug = existing.slug;
@@ -267,7 +351,7 @@ export async function updateBroadcast(
     let baseSlug = slugify(data.slug);
     let candidate = baseSlug;
     let counter = 1;
-    while (db.broadcasts.some((b) => b.slug === candidate && b.id !== id)) {
+    while (db.broadcasts.some((b) => b.slug === candidate && b.id !== existing.id)) {
       candidate = `${baseSlug}-${counter++}`;
     }
     updatedSlug = candidate;
@@ -303,15 +387,27 @@ export async function updateBroadcast(
     }
   }
 
-  db.broadcasts[index] = updated;
+  const index = db.broadcasts.findIndex((b) => b.id === existing.id || b.slug === existing.slug);
+  if (index !== -1) {
+    db.broadcasts[index] = updated;
+  } else {
+    db.broadcasts.unshift(updated);
+  }
   saveDb(db);
   return updated;
 }
 
 export async function deleteBroadcast(id: string): Promise<boolean> {
+  let deletedFromMysql = false;
   if (isMysqlConfigured()) {
     try {
-      await mysqlDeleteBroadcast(id);
+      deletedFromMysql = await mysqlDeleteBroadcast(id);
+      if (!deletedFromMysql) {
+        const item = await mysqlGetBroadcastBySlug(id);
+        if (item) {
+          deletedFromMysql = await mysqlDeleteBroadcast(item.id);
+        }
+      }
     } catch (err) {
       console.warn('MySQL deleteBroadcast failed:', err);
     }
@@ -319,12 +415,13 @@ export async function deleteBroadcast(id: string): Promise<boolean> {
 
   const db = ensureDb();
   const initialLength = db.broadcasts.length;
-  db.broadcasts = db.broadcasts.filter((b) => b.id !== id);
-  if (db.broadcasts.length !== initialLength) {
+  db.broadcasts = db.broadcasts.filter((b) => b.id !== id && b.slug !== id);
+  const deletedFromLocal = db.broadcasts.length !== initialLength;
+  if (deletedFromLocal) {
     saveDb(db);
-    return true;
   }
-  return false;
+
+  return deletedFromMysql || deletedFromLocal;
 }
 
 /* ================== NEWS OPERATIONS ================== */
@@ -334,6 +431,7 @@ export async function getNewsList(options?: {
   search?: string;
   category?: string;
   limit?: number;
+  includeFuture?: boolean;
 }): Promise<News[]> {
   if (isMysqlConfigured()) {
     try {
@@ -347,7 +445,15 @@ export async function getNewsList(options?: {
   let list = [...db.news];
 
   if (options?.status) {
-    list = list.filter((n) => n.status === options.status);
+    if (options.status === 'Published' && !options?.includeFuture) {
+      const now = Date.now();
+      list = list.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
+    } else {
+      list = list.filter((n) => n.status === options.status);
+    }
+  } else if (!options?.includeFuture) {
+    const now = Date.now();
+    list = list.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
   }
 
   if (options?.category && options.category !== 'Semua') {
@@ -375,31 +481,44 @@ export async function getNewsList(options?: {
   return list;
 }
 
-export async function getNewsBySlug(slug: string): Promise<News | null> {
+export async function getNewsBySlug(slug: string, options?: { allowFuture?: boolean }): Promise<News | null> {
+  let item: News | null = null;
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetNewsBySlug(slug);
+      item = await mysqlGetNewsBySlug(slug);
+      if (!item) item = await mysqlGetNewsById(slug);
     } catch (err) {
       console.warn('MySQL getNewsBySlug failed, falling back to local store:', err);
     }
   }
+  if (!item) {
+    const db = ensureDb();
+    item = db.news.find((n) => n.slug === slug || n.id === slug) || null;
+  }
 
-  const db = ensureDb();
-  const found = db.news.find((n) => n.slug === slug);
-  return found || null;
+  if (item && !options?.allowFuture && item.status === 'Published') {
+    if (new Date(item.publishedAt).getTime() > Date.now()) {
+      return null;
+    }
+  }
+
+  return item;
 }
 
 export async function getNewsById(id: string): Promise<News | null> {
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetNewsById(id);
+      const item = await mysqlGetNewsById(id);
+      if (item) return item;
+      const bySlug = await mysqlGetNewsBySlug(id);
+      if (bySlug) return bySlug;
     } catch (err) {
       console.warn('MySQL getNewsById failed, falling back to local store:', err);
     }
   }
 
   const db = ensureDb();
-  const found = db.news.find((n) => n.id === id);
+  const found = db.news.find((n) => n.id === id || n.slug === id);
   return found || null;
 }
 
@@ -448,11 +567,10 @@ export async function updateNews(
   id: string,
   data: Partial<NewsFormData>
 ): Promise<News | null> {
-  const db = ensureDb();
-  const index = db.news.findIndex((n) => n.id === id);
-  if (index === -1) return null;
+  const existing = await getNewsById(id);
+  if (!existing) return null;
 
-  const existing = db.news[index];
+  const db = ensureDb();
   const now = new Date().toISOString();
 
   let updatedSlug = existing.slug;
@@ -460,7 +578,7 @@ export async function updateNews(
     let baseSlug = slugify(data.slug);
     let candidate = baseSlug;
     let counter = 1;
-    while (db.news.some((n) => n.slug === candidate && n.id !== id)) {
+    while (db.news.some((n) => n.slug === candidate && n.id !== existing.id)) {
       candidate = `${baseSlug}-${counter++}`;
     }
     updatedSlug = candidate;
@@ -487,15 +605,27 @@ export async function updateNews(
     }
   }
 
-  db.news[index] = updated;
+  const index = db.news.findIndex((n) => n.id === existing.id || n.slug === existing.slug);
+  if (index !== -1) {
+    db.news[index] = updated;
+  } else {
+    db.news.unshift(updated);
+  }
   saveDb(db);
   return updated;
 }
 
 export async function deleteNews(id: string): Promise<boolean> {
+  let deletedFromMysql = false;
   if (isMysqlConfigured()) {
     try {
-      await mysqlDeleteNews(id);
+      deletedFromMysql = await mysqlDeleteNews(id);
+      if (!deletedFromMysql) {
+        const item = await mysqlGetNewsBySlug(id);
+        if (item) {
+          deletedFromMysql = await mysqlDeleteNews(item.id);
+        }
+      }
     } catch (err) {
       console.warn('MySQL deleteNews failed:', err);
     }
@@ -503,35 +633,65 @@ export async function deleteNews(id: string): Promise<boolean> {
 
   const db = ensureDb();
   const initialLength = db.news.length;
-  db.news = db.news.filter((n) => n.id !== id);
-  if (db.news.length !== initialLength) {
+  db.news = db.news.filter((n) => n.id !== id && n.slug !== id);
+  const deletedFromLocal = db.news.length !== initialLength;
+  if (deletedFromLocal) {
     saveDb(db);
-    return true;
   }
-  return false;
-}
 
+  return deletedFromMysql || deletedFromLocal;
+}
 
 /* ================== DASHBOARD METRICS ================== */
 
 export async function getDashboardStats() {
-  const db = ensureDb();
-  const totalBroadcasts = db.broadcasts.length;
-  const publishedBroadcasts = db.broadcasts.filter((b) => b.status === 'Published').length;
-  const draftBroadcasts = db.broadcasts.filter((b) => b.status === 'Draft').length;
+  const allBroadcasts = await getBroadcasts();
+  const allNews = await getNewsList();
 
-  const totalNews = db.news.length;
-  const publishedNews = db.news.filter((n) => n.status === 'Published').length;
-  const draftNews = db.news.filter((n) => n.status === 'Draft').length;
+  const activeBroadcasts = allBroadcasts.filter((b) => b.status !== 'Archived');
+  const totalBroadcasts = activeBroadcasts.length;
+  const publishedBroadcasts = allBroadcasts.filter((b) => b.status === 'Published').length;
+  const draftBroadcasts = allBroadcasts.filter((b) => b.status === 'Draft').length;
+  const archivedBroadcasts = allBroadcasts.filter((b) => b.status === 'Archived').length;
+
+  const activeNews = allNews.filter((n) => n.status !== 'Archived');
+  const totalNews = activeNews.length;
+  const publishedNews = allNews.filter((n) => n.status === 'Published').length;
+  const draftNews = allNews.filter((n) => n.status === 'Draft').length;
+  const archivedNews = allNews.filter((n) => n.status === 'Archived').length;
 
   return {
     totalBroadcasts,
     publishedBroadcasts,
     draftBroadcasts,
+    archivedBroadcasts,
     totalNews,
     publishedNews,
     draftNews,
-    recentBroadcasts: db.broadcasts.slice(0, 5),
-    recentNews: db.news.slice(0, 5),
+    archivedNews,
+    recentBroadcasts: activeBroadcasts.slice(0, 5),
+    recentNews: activeNews.slice(0, 5),
   };
+}
+
+/* ================== SETTINGS OPERATIONS ================== */
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const db = ensureDb();
+  return {
+    ...defaultSettings,
+    ...(db.settings || {}),
+  };
+}
+
+export async function updateSiteSettings(partial: Partial<SiteSettings>): Promise<SiteSettings> {
+  const db = ensureDb();
+  const current = db.settings || defaultSettings;
+  const updated: SiteSettings = {
+    ...current,
+    ...partial,
+  };
+  db.settings = updated;
+  saveDb(db);
+  return updated;
 }

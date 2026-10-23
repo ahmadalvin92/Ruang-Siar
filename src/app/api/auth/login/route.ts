@@ -19,7 +19,8 @@ export async function POST(request: NextRequest) {
     value: createAdminSession(),
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    // Tidak menggunakan 'secure: true' agar cookie bisa dikirim via HTTP maupun HTTPS
+    secure: false,
     path: '/',
     maxAge: adminSessionMaxAge,
   });

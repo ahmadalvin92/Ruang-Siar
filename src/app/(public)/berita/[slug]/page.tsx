@@ -5,7 +5,10 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getNewsBySlug, getNewsList } from '@/lib/data/store';
 import NewsCard from '@/components/NewsCard';
-import { formatDateIndonesian } from '@/lib/utils';
+import ShareButtons from '@/components/ShareButtons';
+import AdSenseBanner from '@/components/AdSenseBanner';
+import FormattedArticle from '@/components/FormattedArticle';
+import { formatDateTimeIndonesian } from '@/lib/utils';
 import { ArrowLeft, Calendar, User, Share2, Newspaper } from 'lucide-react';
 
 export const revalidate = 0;
@@ -68,8 +71,10 @@ export default async function BeritaDetailPage({ params }: BeritaDetailPageProps
             {news.category}
           </span>
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            <time dateTime={news.publishedAt}>{formatDateIndonesian(news.publishedAt)}</time>
+            <Calendar className="w-3.5 h-3.5 text-amber-500/80" />
+            <time dateTime={news.publishedAt} className="font-medium text-slate-300">
+              {formatDateTimeIndonesian(news.publishedAt)}
+            </time>
           </div>
         </div>
 
@@ -108,12 +113,22 @@ export default async function BeritaDetailPage({ params }: BeritaDetailPageProps
       )}
 
       {/* Main Content */}
-      <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed text-base sm:text-lg space-y-6 mb-16">
-        {news.content.split('\n\n').map((paragraph, idx) => (
-          <p key={idx} className="leading-relaxed">
-            {paragraph}
-          </p>
-        ))}
+      <FormattedArticle
+        content={news.content}
+        className="prose prose-invert max-w-none text-slate-300 leading-relaxed text-base sm:text-lg space-y-6 mb-10"
+      />
+
+      {/* Share Section */}
+      <div className="mb-10">
+        <ShareButtons
+          title={news.title}
+          description={news.excerpt}
+        />
+      </div>
+
+      {/* In-Article AdSense Banner */}
+      <div className="mb-12">
+        <AdSenseBanner format="leaderboard" slotName="Berita Detail Bottom" />
       </div>
 
       {/* Other News */}

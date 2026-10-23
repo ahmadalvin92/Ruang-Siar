@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { getBroadcasts, getNewsList } from '@/lib/data/store';
+import { getBroadcasts, getNewsList, getSiteSettings } from '@/lib/data/store';
 import HeroBroadcast from '@/components/HeroBroadcast';
 import BroadcastGrid from '@/components/BroadcastGrid';
 import NewsGrid from '@/components/NewsGrid';
@@ -24,20 +24,23 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const publishedBroadcasts = await getBroadcasts({ status: 'Published' });
   const publishedNews = await getNewsList({ status: 'Published', limit: 4 });
+  const settings = await getSiteSettings();
 
   const mainBroadcast = publishedBroadcasts[0];
-  const otherBroadcasts = publishedBroadcasts.slice(1, 7);
+  const otherBroadcasts = publishedBroadcasts.slice(1);
+
+  const cleanWa = (settings.whatsappNumber || '+62 896-3017-2935').replace(/[^0-9]/g, '');
 
   const stats = [
     { icon: <Disc3 className="w-5 h-5" />, value: `${publishedBroadcasts.length}+`, label: 'Episode Siaran', color: 'text-amber-400' },
-    { icon: <Users className="w-5 h-5" />, value: '10K+', label: 'Pendengar Aktif', color: 'text-sky-400' },
-    { icon: <Music2 className="w-5 h-5" />, value: '500+', label: 'Lagu Dikurasi', color: 'text-purple-400' },
+    { icon: <Users className="w-5 h-5" />, value: settings.statsListeners || '10K+', label: 'Pendengar Aktif', color: 'text-sky-400' },
+    { icon: <Music2 className="w-5 h-5" />, value: settings.statsCuratedSongs || '500+', label: 'Lagu Dikurasi', color: 'text-purple-400' },
     {
       icon: <MessageCircle className="w-5 h-5" />,
       value: 'WhatsApp',
-      label: '+62 896-3017-2935',
+      label: settings.whatsappNumber || '+62 896-3017-2935',
       color: 'text-emerald-400',
-      href: 'https://wa.me/6289630172935',
+      href: `https://wa.me/${cleanWa}`,
     },
   ];
 
@@ -47,7 +50,7 @@ export default async function HomePage() {
       {/* 1. HERO / MAIN BROADCAST */}
       {/* ====================== */}
       {mainBroadcast ? (
-        <HeroBroadcast broadcast={mainBroadcast} />
+        <HeroBroadcast broadcast={mainBroadcast} broadcasts={publishedBroadcasts} />
       ) : (
         <div className="max-w-7xl mx-auto px-4 py-20 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 mb-6">
@@ -111,7 +114,12 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <BroadcastGrid broadcasts={otherBroadcasts} />
+        <BroadcastGrid
+          broadcasts={otherBroadcasts}
+          initialLimit={6}
+          step={6}
+          showLoadMore={true}
+        />
       </section>
 
       {/* ====================== */}
@@ -141,11 +149,12 @@ export default async function HomePage() {
               </div>
 
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight mb-5 leading-tight">
-                Harmonisasi Narasi Suara & <span className="gradient-text-vibrant">Playlist YouTube Resmi</span>
+                {settings.conceptHeading || 'Harmonisasi Narasi Suara & Playlist YouTube Resmi'}
               </h3>
 
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-10 max-w-2xl">
-                Ruang Siar menyajikan format penyiaran modern — broadcaster meramu narasi dan kabar terkini, sementara alunan musik dinikmati via pemutar sematan resmi YouTube. Bersih dari unduhan ilegal, menghormati hak cipta musisi.
+                {settings.conceptDescription ||
+                  'Ruang Siar menyajikan format penyiaran modern — broadcaster meramu narasi dan kabar terkini, sementara alunan musik dinikmati via pemutar sematan resmi YouTube. Bersih dari unduhan ilegal, menghormati hak cipta musisi.'}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">

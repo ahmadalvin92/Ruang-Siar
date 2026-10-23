@@ -3,18 +3,34 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ExternalLink, LayoutDashboard, LogOut, Menu, Newspaper, Radio, X } from 'lucide-react';
+import {
+  ExternalLink,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Newspaper,
+  Radio,
+  Settings,
+  X,
+  Archive,
+  Bot,
+  Sparkles,
+} from 'lucide-react';
 import Image from 'next/image';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import AIChatbotModal from '@/components/admin/AIChatbotModal';
 
 const links = [
   { name: 'Ringkasan', href: '/admin', icon: LayoutDashboard },
   { name: 'Kelola Siaran', href: '/admin/siaran', icon: Radio },
   { name: 'Kelola Berita', href: '/admin/berita', icon: Newspaper },
+  { name: 'Pengaturan & AdSense', href: '/admin/pengaturan', icon: Settings },
+  { name: 'Tempat Sampah', href: '/admin/sampah', icon: Archive },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -25,8 +41,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="min-h-screen bg-[#07090e] flex flex-col md:flex-row">
-      <div className="hidden md:block"><AdminSidebar /></div>
+    <div className="min-h-screen bg-[#07090e] flex flex-col md:flex-row relative">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <AdminSidebar />
+      </div>
+
+      {/* Mobile Top Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-slate-950 border-b border-slate-800 sticky top-0 z-40">
         <Link href="/admin" className="flex items-center gap-2">
           <Image
@@ -41,10 +62,101 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </span>
         </Link>
 
-        <div className="flex items-center gap-1"><Link href="/" target="_blank" className="p-2 text-slate-400" title="Lihat website"><ExternalLink className="w-4 h-4" /></Link><button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">{mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button></div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsAIChatOpen(true)}
+            className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400"
+            title="Buka Asisten AI"
+          >
+            <Bot className="w-4 h-4" />
+          </button>
+          <Link
+            href="/"
+            target="_blank"
+            className="p-2 text-slate-400"
+            title="Lihat website"
+          >
+            <ExternalLink className="w-4 h-4" />
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
-      {mobileMenuOpen && <div className="md:hidden bg-slate-950 border-b border-slate-800 p-4 space-y-2">{links.map((link) => { const Icon = link.icon; const active = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href)); return <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold ${active ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-900'}`}><Icon className="w-4 h-4" />{link.name}</Link>; })}<button onClick={logout} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"><LogOut className="w-4 h-4" />Keluar</button></div>}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">{children}</main>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-slate-950 border-b border-slate-800 p-4 space-y-2">
+          {links.map((link) => {
+            const Icon = link.icon;
+            const active =
+              pathname === link.href ||
+              (link.href !== '/admin' && pathname.startsWith(link.href));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold ${
+                  active
+                    ? 'bg-amber-500 text-slate-950'
+                    : 'text-slate-300 hover:bg-slate-900'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {link.name}
+              </Link>
+            );
+          })}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setIsAIChatOpen(true);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold"
+          >
+            <Bot className="w-4 h-4" />
+            <span>Asisten Redaksi AI</span>
+          </button>
+          <button
+            onClick={logout}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"
+          >
+            <LogOut className="w-4 h-4" />
+            Keluar
+          </button>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        {children}
+      </main>
+
+      {/* Floating AI Chatbot Button */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          onClick={() => setIsAIChatOpen(true)}
+          className="group flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-xs shadow-2xl shadow-amber-500/30 border border-amber-300/40 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <div className="relative">
+            <Bot className="w-4 h-4" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500" />
+          </div>
+          <span>Asisten AI Gemini</span>
+          <Sparkles className="w-3.5 h-3.5 text-slate-950/70 group-hover:rotate-12 transition-transform" />
+        </button>
+      </div>
+
+      {/* Gemini AI Chatbot Modal */}
+      <AIChatbotModal
+        isOpen={isAIChatOpen}
+        onClose={() => setIsAIChatOpen(false)}
+      />
     </div>
   );
 }

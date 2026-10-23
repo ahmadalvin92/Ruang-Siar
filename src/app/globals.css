@@ -66,10 +66,10 @@ h1, h2, h3 {
 }
 
 .glass-nav {
-  background: rgba(6, 8, 15, 0.92);
+  background: rgba(6, 8, 15, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.08);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.12);
 }
 
 .glass-card {

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Broadcast } from '@/types';
-import { formatDateIndonesian } from '@/lib/utils';
+import { formatDateTimeIndonesian } from '@/lib/utils';
 import { Play, Clock, Calendar, Disc3, Radio } from 'lucide-react';
 
 interface BroadcastCardProps {
@@ -56,7 +56,14 @@ export default function BroadcastCard({ broadcast }: BroadcastCardProps) {
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-          <span className={`px-2.5 py-1 rounded-lg border text-[11px] font-bold backdrop-blur-sm ${catStyle}`}>
+          <span className={`px-2.5 py-1 rounded-lg border text-[11px] font-bold backdrop-blur-sm flex items-center gap-1.5 ${
+            broadcast.category.toLowerCase().includes('live') || broadcast.youtubePlaylistUrl?.includes('/live/')
+              ? 'bg-red-600/90 text-white border-red-500/50 shadow-md shadow-red-600/30'
+              : catStyle
+          }`}>
+            {(broadcast.category.toLowerCase().includes('live') || broadcast.youtubePlaylistUrl?.includes('/live/')) && (
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+            )}
             {broadcast.category}
           </span>
           {broadcast.duration && (
@@ -80,10 +87,10 @@ export default function BroadcastCard({ broadcast }: BroadcastCardProps) {
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-5 relative z-10">
-        <div className="flex items-center gap-2 text-xs text-slate-500 mb-2.5">
-          <Calendar className="w-3.5 h-3.5" />
-          <time dateTime={broadcast.publishedAt}>
-            {formatDateIndonesian(broadcast.publishedAt)}
+        <div className="flex items-center gap-2 text-xs text-slate-400 mb-2.5">
+          <Calendar className="w-3.5 h-3.5 text-amber-500/80" />
+          <time dateTime={broadcast.publishedAt} className="font-medium">
+            {formatDateTimeIndonesian(broadcast.publishedAt)}
           </time>
         </div>
 

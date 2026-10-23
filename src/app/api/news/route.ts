@@ -6,14 +6,19 @@ import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status') as any;
+    const statusParam = searchParams.get('status') as any;
     const category = searchParams.get('kategori') || undefined;
     const search = searchParams.get('q') || undefined;
 
+    const includeFuture =
+      searchParams.get('includeFuture') === '1' ||
+      isValidAdminSession(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
+
     const list = await getNewsList({
-      status: status || undefined,
+      status: statusParam || (includeFuture ? undefined : 'Published'),
       category,
       search,
+      includeFuture,
     });
 
     return NextResponse.json({ success: true, data: list });

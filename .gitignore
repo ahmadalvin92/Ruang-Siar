@@ -16,3 +16,10 @@ out/
 .DS_Store
 *.log
 .vscode/
+
+# deployment packages and credential scripts
+*.zip
+*.tar.gz
+*.php
+cpanel_cookies.txt
+sync_build.py

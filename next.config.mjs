@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   // Hide the Next.js developer-tools badge while working locally.
   devIndicators: false,
   images: {
@@ -17,6 +18,27 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/warta',
+        destination: '/berita',
+      },
+      {
+        source: '/warta/:slug*',
+        destination: '/berita/:slug*',
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: '/jadwal',
+        destination: '/siaran',
+        permanent: false,
+      },
+    ];
   },
 };
 

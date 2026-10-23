@@ -1,15 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Broadcast } from '@/types';
 import YoutubePlayer from './YoutubePlayer';
 import RundownWidget from './RundownWidget';
-import { formatDateIndonesian } from '@/lib/utils';
-import { Radio, Clock, Calendar, ArrowRight, Share2, Volume2, Zap, Disc3, Mic2 } from 'lucide-react';
+import { formatDateIndonesian, formatDateTimeIndonesian } from '@/lib/utils';
+import { Radio, Clock, Calendar, ArrowRight, Share2, Volume2, Disc3, Mic2, SkipBack } from 'lucide-react';
 
 interface HeroBroadcastProps {
   broadcast: Broadcast;
+  broadcasts?: Broadcast[];
 }
 
 // Equalizer visual element
@@ -25,16 +26,30 @@ const LiveEqualizer = () => (
   </div>
 );
 
-export default function HeroBroadcast({ broadcast }: HeroBroadcastProps) {
-  const shareUrl = `/siaran/${broadcast.slug}`;
+export default function HeroBroadcast({ broadcast: initialBroadcast, broadcasts = [] }: HeroBroadcastProps) {
+  // If broadcasts list is passed, allow seamless progression
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoPlayNext, setAutoPlayNext] = useState(false);
+
+  const activeBroadcast = (broadcasts.length > 0 && broadcasts[activeIndex]) ? broadcasts[activeIndex] : initialBroadcast;
+  const previousBroadcast = broadcasts.length > activeIndex + 1 ? broadcasts[activeIndex + 1] : null;
+
+  const shareUrl = `/siaran/${activeBroadcast.slug}`;
+
+  const handlePlayPrevious = () => {
+    if (broadcasts.length > activeIndex + 1) {
+      setActiveIndex((prev) => prev + 1);
+      setAutoPlayNext(true);
+    }
+  };
 
   const handleShare = () => {
     if (typeof window === 'undefined') return;
     const fullUrl = window.location.origin + shareUrl;
     if (navigator.share) {
       navigator.share({
-        title: broadcast.title,
-        text: broadcast.description,
+        title: activeBroadcast.title,
+        text: activeBroadcast.description,
         url: fullUrl,
       }).catch(() => {});
     } else if (navigator.clipboard) {
@@ -61,24 +76,28 @@ export default function HeroBroadcast({ broadcast }: HeroBroadcastProps) {
             {/* Live ON AIR badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-red-500/15 to-rose-500/10 border border-red-500/30 text-red-400 text-xs font-bold tracking-wider uppercase shadow-md shadow-red-500/10">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-live" />
-              Siaran Utama Hari Ini
+              {activeBroadcast.category.toLowerCase().includes('live') || activeBroadcast.youtubePlaylistUrl?.includes('/live/')
+                ? 'SIARAN LANGSUNG STUDIO (LIVE)'
+                : activeIndex === 0
+                ? 'Siaran Utama Hari Ini'
+                : `Memutar Arsip (${activeIndex + 1}/${broadcasts.length})`}
               <LiveEqualizer />
             </div>
             <span className="hidden sm:inline-flex px-3 py-1.5 rounded-xl bg-white/[0.04] text-slate-300 text-xs font-semibold border border-white/[0.07] backdrop-blur-sm">
-              {broadcast.category}
+              {activeBroadcast.category}
             </span>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-slate-400">
-            {broadcast.duration && (
+            {activeBroadcast.duration && (
               <span className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-amber-400" />
-                {broadcast.duration}
+                {activeBroadcast.duration}
               </span>
             )}
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 font-medium text-slate-300">
               <Calendar className="w-3.5 h-3.5 text-amber-400" />
-              {formatDateIndonesian(broadcast.publishedAt)}
+              {formatDateTimeIndonesian(activeBroadcast.publishedAt)}
             </span>
           </div>
         </div>
@@ -87,10 +106,19 @@ export default function HeroBroadcast({ broadcast }: HeroBroadcastProps) {
         <div className="mb-8 rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/30 via-orange-400/15 to-purple-500/15 shadow-2xl shadow-amber-500/10">
           <div className="rounded-[14px] overflow-hidden bg-slate-950">
             <YoutubePlayer
-              playlistUrl={broadcast.youtubePlaylistUrl}
-              title={broadcast.title}
-              posterUrl={broadcast.thumbnailUrl}
-              deferUntilPlay
+              key={activeBroadcast.id}
+              playlistUrl={activeBroadcast.youtubePlaylistUrl}
+              title={activeBroadcast.title}
+              posterUrl={activeBroadcast.thumbnailUrl}
+              deferUntilPlay={!autoPlayNext}
+              autoPlay={autoPlayNext}
+              previousBroadcast={previousBroadcast ? {
+                title: previousBroadcast.title,
+                slug: previousBroadcast.slug,
+                youtubePlaylistUrl: previousBroadcast.youtubePlaylistUrl,
+                thumbnailUrl: previousBroadcast.thumbnailUrl,
+              } : null}
+              onPlayPrevious={handlePlayPrevious}
               className="w-full"
             />
           </div>
@@ -100,16 +128,16 @@ export default function HeroBroadcast({ broadcast }: HeroBroadcastProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-8">
           <div className="lg:col-span-8 space-y-4">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black text-white tracking-tight leading-tight">
-              {broadcast.title}
+              {activeBroadcast.title}
             </h1>
             <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-              {broadcast.description}
+              {activeBroadcast.description}
             </p>
           </div>
 
           <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end lg:items-end">
             <Link
-              href={`/siaran/${broadcast.slug}`}
+              href={`/siaran/${activeBroadcast.slug}`}
               className="group inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto lg:w-full"
             >
               <Volume2 className="w-4 h-4" />
@@ -128,11 +156,12 @@ export default function HeroBroadcast({ broadcast }: HeroBroadcastProps) {
         </div>
 
         {/* Rundown & Tracklist */}
-        {broadcast.rundown && broadcast.rundown.length > 0 && (
+        {activeBroadcast.rundown && activeBroadcast.rundown.length > 0 && (
           <div className="pt-2">
             <RundownWidget
-              rundown={broadcast.rundown}
-              title={`Rundown Siaran — ${broadcast.title}`}
+              key={activeBroadcast.id}
+              rundown={activeBroadcast.rundown}
+              title={`Rundown Siaran — ${activeBroadcast.title}`}
             />
           </div>
         )}

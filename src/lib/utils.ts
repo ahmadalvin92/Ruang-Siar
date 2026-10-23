@@ -10,6 +10,7 @@ export function formatDateIndonesian(dateStr: string | Date | undefined): string
   try {
     const d = new Date(dateStr);
     return new Intl.DateTimeFormat('id-ID', {
+      timeZone: 'Asia/Jakarta',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -23,13 +24,22 @@ export function formatDateTimeIndonesian(dateStr: string | Date | undefined): st
   if (!dateStr) return '-';
   try {
     const d = new Date(dateStr);
-    return new Intl.DateTimeFormat('id-ID', {
+    const dateFormatted = new Intl.DateTimeFormat('id-ID', {
+      timeZone: 'Asia/Jakarta',
       day: 'numeric',
-      month: 'short',
+      month: 'long',
       year: 'numeric',
+    }).format(d);
+
+    // Format time in Asia/Jakarta (WIB)
+    const timeFormatted = new Intl.DateTimeFormat('id-ID', {
+      timeZone: 'Asia/Jakarta',
       hour: '2-digit',
       minute: '2-digit',
-    }).format(d);
+      hour12: false,
+    }).format(d).replace('.', ':');
+
+    return `${dateFormatted} • ${timeFormatted} WIB`;
   } catch {
     return String(dateStr);
   }

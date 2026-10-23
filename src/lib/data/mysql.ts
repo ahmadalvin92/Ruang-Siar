@@ -46,6 +46,14 @@ function parseRundown(raw: unknown): RundownItem[] {
   return [];
 }
 
+function normalizeStatus(val: any): ContentStatus {
+  if (!val) return 'Published';
+  const s = String(val).trim().toLowerCase();
+  if (s === 'draft') return 'Draft';
+  if (s === 'archived' || s === 'trash') return 'Archived';
+  return 'Published';
+}
+
 function rowToBroadcast(row: any): Broadcast {
   return {
     id: String(row.id),
@@ -57,7 +65,7 @@ function rowToBroadcast(row: any): Broadcast {
     category: String(row.category || 'Umum'),
     duration: row.duration || undefined,
     rundown: parseRundown(row.rundown),
-    status: (row.status as ContentStatus) || 'PUBLISHED',
+    status: normalizeStatus(row.status),
     publishedAt: row.publishedAt instanceof Date ? row.publishedAt.toISOString() : String(row.publishedAt || new Date().toISOString()),
     createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : String(row.createdAt || new Date().toISOString()),
     updatedAt: row.updatedAt instanceof Date ? row.updatedAt.toISOString() : String(row.updatedAt || new Date().toISOString()),
@@ -73,7 +81,7 @@ function rowToNews(row: any): News {
     content: String(row.content || ''),
     thumbnailUrl: row.thumbnailUrl || undefined,
     category: String(row.category || 'Berita'),
-    status: (row.status as ContentStatus) || 'PUBLISHED',
+    status: normalizeStatus(row.status),
     publishedAt: row.publishedAt instanceof Date ? row.publishedAt.toISOString() : String(row.publishedAt || new Date().toISOString()),
     createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : String(row.createdAt || new Date().toISOString()),
     updatedAt: row.updatedAt instanceof Date ? row.updatedAt.toISOString() : String(row.updatedAt || new Date().toISOString()),
@@ -87,6 +95,7 @@ export async function mysqlGetBroadcasts(options?: {
   search?: string;
   category?: string;
   limit?: number;
+  includeFuture?: boolean;
 }): Promise<Broadcast[]> {
   const p = getDbPool();
   if (!p) throw new Error('MySQL pool not initialized');
@@ -97,6 +106,14 @@ export async function mysqlGetBroadcasts(options?: {
   if (options?.status) {
     conditions.push('status = ?');
     params.push(options.status);
+
+    if (options.status === 'Published' && !options?.includeFuture) {
+      conditions.push('publishedAt <= ?');
+      params.push(new Date());
+    }
+  } else if (!options?.includeFuture) {
+    conditions.push("status = 'Published' AND publishedAt <= ?");
+    params.push(new Date());
   }
 
   if (options?.category && options.category !== 'Semua') {
@@ -203,6 +220,7 @@ export async function mysqlGetNews(options?: {
   search?: string;
   category?: string;
   limit?: number;
+  includeFuture?: boolean;
 }): Promise<News[]> {
   const p = getDbPool();
   if (!p) throw new Error('MySQL pool not initialized');
@@ -213,6 +231,14 @@ export async function mysqlGetNews(options?: {
   if (options?.status) {
     conditions.push('status = ?');
     params.push(options.status);
+
+    if (options.status === 'Published' && !options?.includeFuture) {
+      conditions.push('publishedAt <= ?');
+      params.push(new Date());
+    }
+  } else if (!options?.includeFuture) {
+    conditions.push("status = 'Published' AND publishedAt <= ?");
+    params.push(new Date());
   }
 
   if (options?.category && options.category !== 'Semua') {

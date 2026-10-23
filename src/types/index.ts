@@ -61,3 +61,65 @@ export interface NewsFormData {
   status: ContentStatus;
   publishedAt?: string;
 }
+
+export interface ScheduleItem {
+  time: string;
+  name: string;
+  color: string;
+}
+
+export interface RedaksiMember {
+  role: string;
+  name: string;
+  bio?: string;
+}
+
+export interface AboutPrinciple {
+  title: string;
+  desc: string;
+}
+
+export interface AboutStep {
+  title: string;
+  desc: string;
+}
+
+export interface SiteSettings {
+  siteName: string;
+  siteTagline: string;
+  siteDescription: string;
+  instagramUrl: string;
+  youtubeUrl: string;
+  twitterUrl: string;
+  whatsappNumber?: string;
+  contactEmail: string;
+  contactLocation: string;
+  activeStatusText: string;
+  schedules: ScheduleItem[];
+  adSensePublisherId?: string;
+  adSenseSlotLeaderboard?: string;
+  adSenseSlotRectangle?: string;
+  adSenseEnabled?: boolean;
+  googleAnalyticsId?: string;
+
+  // Custom Content: Tentang Kami
+  aboutBadge?: string;
+  aboutHeading?: string;
+  aboutParagraph1?: string;
+  aboutParagraph2?: string;
+  aboutPrinciples?: AboutPrinciple[];
+  aboutStepsHeading?: string;
+  aboutSteps?: AboutStep[];
+  aboutCtaHeading?: string;
+
+  // Custom Content: Redaksi
+  redaksiTitle?: string;
+  redaksiDescription?: string;
+  redaksiMembers?: RedaksiMember[];
+
+  // Custom Content: Beranda
+  statsListeners?: string;
+  statsCuratedSongs?: string;
+  conceptHeading?: string;
+  conceptDescription?: string;
+}

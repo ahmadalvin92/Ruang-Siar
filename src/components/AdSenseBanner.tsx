@@ -1,5 +1,6 @@
 import React from 'react';
-import { ExternalLink, Sparkles, Megaphone, Info } from 'lucide-react';
+import { Megaphone, Info } from 'lucide-react';
+import { getSiteSettings } from '@/lib/data/store';
 
 interface AdSenseBannerProps {
   format?: 'leaderboard' | 'rectangle' | 'inline';
@@ -7,11 +8,41 @@ interface AdSenseBannerProps {
   slotName?: string;
 }
 
-export default function AdSenseBanner({
+export default async function AdSenseBanner({
   format = 'leaderboard',
   className = '',
   slotName = 'Ruang Siar Network',
 }: AdSenseBannerProps) {
+  const settings = await getSiteSettings();
+  const isEnabled = settings.adSenseEnabled && Boolean(settings.adSensePublisherId);
+  const publisherId = settings.adSensePublisherId;
+  const slotId = format === 'rectangle' ? settings.adSenseSlotRectangle : settings.adSenseSlotLeaderboard;
+
+  // If AdSense is activated and Publisher ID is provided, render real AdSense tag structure
+  if (isEnabled && publisherId && slotId) {
+    return (
+      <div className={`w-full overflow-hidden flex flex-col items-center justify-center my-4 ${className}`}>
+        <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1 font-semibold">
+          <span>Advertisements</span>
+        </div>
+        <ins
+          className="adsbygoogle block"
+          style={{ display: 'block' }}
+          data-ad-client={publisherId}
+          data-ad-slot={slotId}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: '(adsbygoogle = window.adsbygoogle || []).push({});',
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Fallback: Elegant placeholder banner promoting the AdSense / Sponsor slot
   if (format === 'rectangle') {
     return (
       <div
@@ -93,7 +124,7 @@ export default function AdSenseBanner({
           Format: 728 × 90
         </span>
         <div className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold">
-          Slot AdSense Aktif
+          {isEnabled ? 'AdSense Terhubung' : 'Slot AdSense Siap'}
         </div>
       </div>
     </div>

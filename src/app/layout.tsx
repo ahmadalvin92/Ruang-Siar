@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { getSiteSettings } from '@/lib/data/store';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
   title: {
@@ -30,16 +33,31 @@ export const metadata: Metadata = {
     locale: 'id_ID',
     type: 'website',
   },
+  other: {
+    'google-adsense-account': 'ca-pub-5854985607866680',
+  },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+
   return (
     <html lang="id" className="dark">
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-5854985607866680" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5854985607866680"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-screen bg-[#090b10] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+        <GoogleAnalytics gaId={settings.googleAnalyticsId} />
+        <AnalyticsTracker />
         {children}
       </body>
     </html>

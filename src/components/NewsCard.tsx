@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { News } from '@/types';
-import { formatDateIndonesian } from '@/lib/utils';
+import { formatDateTimeIndonesian } from '@/lib/utils';
 import { Calendar, ArrowRight, Newspaper } from 'lucide-react';
 
 interface NewsCardProps {
@@ -41,9 +41,9 @@ export default function NewsCard({ news }: NewsCardProps) {
       <div className="flex flex-col justify-between flex-1 py-1">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            <time dateTime={news.publishedAt}>
-              {formatDateIndonesian(news.publishedAt)}
+            <Calendar className="w-3.5 h-3.5 text-amber-500/80" />
+            <time dateTime={news.publishedAt} className="font-medium">
+              {formatDateTimeIndonesian(news.publishedAt)}
             </time>
           </div>
 

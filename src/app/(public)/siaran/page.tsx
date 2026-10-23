@@ -124,6 +124,9 @@ export default async function SiaranPage({ searchParams }: SiaranPageProps) {
         {/* Broadcast Grid */}
         <BroadcastGrid
           broadcasts={broadcasts}
+          initialLimit={9}
+          step={6}
+          showLoadMore={true}
           emptyMessage="Tidak ada siaran yang sesuai dengan pencarian atau filter."
         />
 

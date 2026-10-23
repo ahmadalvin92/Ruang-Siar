@@ -1,20 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBroadcasts, createBroadcast } from '@/lib/data/store';
-import { isYouTubePlaylist } from '@/lib/youtube';
+import { isYouTubeValid } from '@/lib/youtube';
 import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/auth';
 import { BroadcastFormData } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status') as any;
+    const statusParam = searchParams.get('status') as any;
     const category = searchParams.get('kategori') || undefined;
     const search = searchParams.get('q') || undefined;
 
+    const includeFuture =
+      searchParams.get('includeFuture') === '1' ||
+      isValidAdminSession(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
+
     const list = await getBroadcasts({
-      status: status || undefined,
+      status: statusParam || (includeFuture ? undefined : 'Published'),
       category,
       search,
+      includeFuture,
     });
 
     return NextResponse.json({ success: true, data: list });
@@ -42,14 +47,14 @@ export async function POST(request: NextRequest) {
 
     if (!body.youtubePlaylistUrl || !body.youtubePlaylistUrl.trim()) {
       return NextResponse.json(
-        { success: false, error: 'URL Playlist YouTube wajib diisi' },
+        { success: false, error: 'URL Siaran YouTube wajib diisi' },
         { status: 400 }
       );
     }
 
-    if (!isYouTubePlaylist(body.youtubePlaylistUrl)) {
+    if (!isYouTubeValid(body.youtubePlaylistUrl)) {
       return NextResponse.json(
-        { success: false, error: 'Masukkan link playlist YouTube yang valid, bukan link satu video.' },
+        { success: false, error: 'Masukkan tautan resmi YouTube yang valid (Playlist musik atau Siaran Live Streaming).' },
         { status: 400 }
       );
     }

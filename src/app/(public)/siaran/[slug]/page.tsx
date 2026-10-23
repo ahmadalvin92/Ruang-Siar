@@ -7,6 +7,7 @@ import YoutubePlayer from '@/components/YoutubePlayer';
 import BroadcastCard from '@/components/BroadcastCard';
 import RundownWidget from '@/components/RundownWidget';
 import AdSenseBanner from '@/components/AdSenseBanner';
+import ShareButtons from '@/components/ShareButtons';
 import { formatDateIndonesian, formatDateTimeIndonesian } from '@/lib/utils';
 import { ArrowLeft, Clock, Calendar, Disc3, Radio, Share2, Music2, Info } from 'lucide-react';
 
@@ -15,6 +16,9 @@ export const revalidate = 0;
 interface SiaranDetailPageProps {
   params: Promise<{
     slug: string;
+  }>;
+  searchParams?: Promise<{
+    autoplay?: string;
   }>;
 }
 
@@ -39,8 +43,11 @@ export async function generateMetadata({ params }: SiaranDetailPageProps): Promi
   };
 }
 
-export default async function SiaranDetailPage({ params }: SiaranDetailPageProps) {
+export default async function SiaranDetailPage({ params, searchParams }: SiaranDetailPageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const isAutoPlay = resolvedSearchParams.autoplay === '1';
+
   const broadcast = await getBroadcastBySlug(slug);
 
   if (!broadcast) {
@@ -48,6 +55,13 @@ export default async function SiaranDetailPage({ params }: SiaranDetailPageProps
   }
 
   const allBroadcasts = await getBroadcasts({ status: 'Published' });
+  const currentIndex = allBroadcasts.findIndex((b) => b.id === broadcast.id);
+  // In publishedBroadcasts sorted by publishedAt DESC:
+  // currentIndex + 1 is the chronologically previous (older) episode.
+  const previousBroadcast = currentIndex !== -1 && currentIndex + 1 < allBroadcasts.length
+    ? allBroadcasts[currentIndex + 1]
+    : null;
+
   const relatedBroadcasts = allBroadcasts
     .filter((b) => b.id !== broadcast.id)
     .slice(0, 3);
@@ -98,8 +112,14 @@ export default async function SiaranDetailPage({ params }: SiaranDetailPageProps
             playlistUrl={broadcast.youtubePlaylistUrl}
             title={broadcast.title}
             posterUrl={broadcast.thumbnailUrl}
-            deferUntilPlay
-            autoPlay={false}
+            deferUntilPlay={!isAutoPlay}
+            autoPlay={isAutoPlay}
+            previousBroadcast={previousBroadcast ? {
+              title: previousBroadcast.title,
+              slug: previousBroadcast.slug,
+              youtubePlaylistUrl: previousBroadcast.youtubePlaylistUrl,
+              thumbnailUrl: previousBroadcast.thumbnailUrl,
+            } : null}
           />
         </div>
 
@@ -132,6 +152,12 @@ export default async function SiaranDetailPage({ params }: SiaranDetailPageProps
                 Episode ini dirangkai untuk memberikan keseimbangan antara informasi verbal dan alunan melodi. Seluruh lagu dalam playlist dimainkan melalui pemutar resmi YouTube tanpa pengunduhan data ilegal, menjamin kompensasi dan hak cipta bagi kreator dan musisi terkait.
               </p>
             </div>
+
+            {/* Share Episode Section */}
+            <ShareButtons
+              title={broadcast.title}
+              description={broadcast.description}
+            />
           </div>
 
           {/* Sidebar Metadata */}

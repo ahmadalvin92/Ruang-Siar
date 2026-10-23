@@ -43,6 +43,11 @@ export function isValidAdminSession(token?: string) {
   );
 }
 
+export async function isAuthenticated(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return isValidAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+}
+
 export async function requireAdmin() {
   const cookieStore = await cookies();
   if (!isValidAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)) {

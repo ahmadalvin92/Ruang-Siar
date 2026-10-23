@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBroadcastById, updateBroadcast, deleteBroadcast } from '@/lib/data/store';
-import { isYouTubePlaylist } from '@/lib/youtube';
+import { isYouTubeValid } from '@/lib/youtube';
 import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/auth';
 import { BroadcastFormData } from '@/types';
 
@@ -39,9 +39,9 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     const { id } = await params;
     const body = (await request.json()) as Partial<BroadcastFormData>;
 
-    if (body.youtubePlaylistUrl !== undefined && !isYouTubePlaylist(body.youtubePlaylistUrl)) {
+    if (body.youtubePlaylistUrl !== undefined && !isYouTubeValid(body.youtubePlaylistUrl)) {
       return NextResponse.json(
-        { success: false, error: 'Masukkan link playlist YouTube yang valid, bukan link satu video.' },
+        { success: false, error: 'Masukkan tautan resmi YouTube yang valid (Playlist musik atau Siaran Live Streaming).' },
         { status: 400 }
       );
     }

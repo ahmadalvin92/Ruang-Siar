@@ -1,248 +1,210 @@
-# 📻 Ruang Siar — Radio Visual & Platform Siaran Playlist YouTube
+# 📻 Ruang Siar — Platform Radio Visual & Media Penyiaran Digital Indonesia
 
-> **Panduan Sederhana & Ramah Pemula:** Dokumen ini ditulis khusus dengan bahasa sehari-hari agar siapa pun yang awam teknologi bisa memahami, menjalankan, dan mengunggah website ini ke GitHub dengan mudah.
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19.0-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS%204-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+[![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+[![YouTube API](https://img.shields.io/badge/YouTube-Data%20API%20v3-red?style=for-the-badge&logo=youtube)](https://developers.google.com/youtube/v3)
+[![Google Gemini AI](https://img.shields.io/badge/Google-Gemini%20AI-orange?style=for-the-badge&logo=google)](https://ai.google.dev/)
+[![Website Live](https://img.shields.io/badge/Production-ruangsiar.id-emerald?style=for-the-badge&logo=googlechrome)](https://ruangsiar.id)
 
----
+> **Ruang Siar** adalah platform penyiaran digital dan radio audio-visual modern Indonesia. Menggabungkan kehangatan narasi penyiar dengan kurasi playlist resmi YouTube, didukung portal warta berita terintegrasi, analitik pengunjung realtime, asisten redaksi berbasis Google Gemini AI, serta sistem CMS mandiri berstandar industri.
 
-## 🌟 1. Apa Itu Ruang Siar? (Penjelasan untuk Orang Awam)
-
-Bayangkan Anda ingin punya **stasiun radio sendiri di internet**, tapi:
-- Tidak punya server mahal untuk streaming audio 24 jam.
-- Takut kena masalah hak cipta musik jika mengunggah lagu MP3 langsung.
-- Ingin pendengar tidak cuma dengar suara penyiar, tapi juga bisa melihat video studio atau video klip musiknya.
-
-**Ruang Siar adalah solusinya!**
-Website ini menyatukan siaran suara/video penyiar dengan lagu-lagu resmi yang ada di **YouTube**. 
-
-### 💡 Konsep Kerjanya Sederhana:
-1. Penyiar merekam suara sapaan / opening siaran (misalnya: *"Halo selamat malam pendengar setia..."*).
-2. Video opening tersebut diunggah ke YouTube.
-3. Di YouTube, dibuatlah sebuah **Playlist**: video pertama adalah video sapaan penyiar tadi, disusul video klip lagu-lagu pilihan.
-4. Anda cukup memasukkan link playlist YouTube tersebut ke halaman Admin (**CMS**) website ini.
-5. Pengunjung website Anda tinggal klik tombol **Play**, dan siaran radio visual otomatis berputar lancar layaknya menonton TV / mendengarkan radio modern!
+🌐 **Website Resmi:** [https://ruangsiar.id](https://ruangsiar.id)  
+🎛️ **Panel Kurator CMS:** [https://ruangsiar.id/admin](https://ruangsiar.id/admin)
 
 ---
 
-## 📚 2. Kamus Istilah Komputer (Biar Nggak Pusing)
+## 📸 Tangkapan Layar Aplikasi (Screenshots Gallery)
 
-| Istilah | Artinya dalam Bahasa Sehari-hari |
-| :--- | :--- |
-| **GitHub** | "Google Drive"-nya para pembuat website. Tempat menyimpan dan memamerkan file kodingan secara online dan aman. |
-| **Repository (Repo)** | Folder proyek Anda di GitHub. |
-| **Terminal** | Jendela hitam di laptop tempat kita mengetik perintah teks ke komputer. |
-| **Localhost** | Website yang sedang berjalan di laptop Anda sendiri, belum bisa dibuka oleh orang lain di internet. |
-| **CMS (Content Management System)** | Halaman admin / dapur redaksi website tempat Anda bisa menambah siaran atau menulis berita tanpa perlu mengubah kodingan sama sekali. |
-| **Push** | Proses mengunggah (upload) perubahan dari laptop Anda ke GitHub. |
-| **Commit** | "Save point" atau catatan rekaman perubahan yang Anda buat di proyek. |
+### 1. Halaman Beranda & Pemutar Siaran Utama
+Tampilan antarmuka beranda dengan pemutar siaran utama, kontrol audio/video, dan mode *Hanya Audio (MP3)*.
+
+![01_homepage_hero](docs/screenshots/01_homepage_hero.png)
 
 ---
 
-## 🏷️ 3. Rekomendasi Nama & Judul di GitHub
+### 2. Widget Rundown Siaran (Interaktif & Default Collapsed)
+Susunan rundown siaran yang tertutup rapi saat pertama kali halaman dibuka, menjaga tampilan tetap ringkas dan elegan.
 
-Saat membuat repository di GitHub, gunakan informasi ini agar terlihat rapi dan profesional:
-
-- **Repository Name (Nama Folder GitHub):** `ruang-siar`
-- **Description (Deskripsi Singkat):**
-  > `Platform Radio Visual & Siaran Streaming Berbasis Playlist YouTube Lengkap dengan Halaman CMS Admin.`
-- **Website Topics / Tags:** `nextjs`, `radio-visual`, `youtube-playlist`, `cms-admin`, `streaming-radio`, `indonesia`
+![02_homepage_rundown_collapsed](docs/screenshots/02_homepage_rundown_collapsed.png)
 
 ---
 
-## 🚀 4. Cara Upload (Push) Proyek Ini ke GitHub untuk Pertama Kali
+### 3. Rundown Siaran Terbuka (Daftar Lagu & Track Jumper)
+Daftar seluruh segmen siaran dan lagu dengan tombol putar langsung ke detik lagu tertentu di pemutar video.
 
-Ikuti 3 tahap mudah berikut:
-
-### Tahap A: Buat Wadah (Repository) di GitHub
-1. Buka browser dan kunjungi [https://github.com](https://github.com). Pastikan Anda sudah login ke akun GitHub Anda.
-2. Di pojok kanan atas, klik tanda tambah (`+`) lalu pilih **New repository** (atau buka [github.com/new](https://github.com/new)).
-3. Pada kolom **Repository name**, ketik: `ruang-siar`.
-4. Pilih **Public** (agar bisa dilihat orang lain) atau **Private** (hanya Anda yang bisa lihat).
-5. ⚠️ **PENTING:** Pada bagian *"Initialize this repository with"*, **JANGAN CENTANG** *Add a README file*, *.gitignore*, ataupun *license*. Biarkan semuanya kosong tanpa centang!
-6. Klik tombol hijau **Create repository**.
-7. Anda akan melihat halaman baru berisi alamat URL repository Anda, contohnya:
-   `https://github.com/ahmadalvin92/ruang-siar.git`
+![03_homepage_rundown_expanded](docs/screenshots/03_homepage_rundown_expanded.png)
 
 ---
 
-### Tahap B: Jalankan Perintah di Terminal Laptop Anda
-1. Buka aplikasi **Terminal** di laptop Mac Anda.
-2. Pastikan Anda berada di dalam folder proyek ini dengan mengetik:
-   ```bash
-   cd /Users/alvin/Desktop/Ruang_Siar
-   ```
-3. Copy dan paste baris perintah di bawah ini **satu per satu** ke Terminal, lalu tekan `Enter`:
+### 4. Katalog Siaran & Arsip Episode
+Koleksi episode siaran tematik Ruang Siar dengan filter kategori (Pagi, Siang, Sore, Malam).
 
-   ```bash
-   # 1. Menyiapkan sistem Git di dalam folder ini
-   git init -b main
-
-   # 2. Menandai semua file proyek untuk siap diupload
-   git add .
-
-   # 3. Memberi nama catatan penyimpanan pertama
-   git commit -m "Rilis awal proyek Ruang Siar"
-
-   # 4. Menyambungkan laptop Anda ke alamat GitHub yang baru dibuat
-   git remote add origin https://github.com/ahmadalvin92/Ruang-Siar.git
-
-   # 5. Mengunggah semua file ke GitHub
-   git push -u origin main
-   ```
-
-4. *Catatan saat pertama kali push:* Jika Terminal meminta login atau Password GitHub, GitHub sekarang mewajibkan **Personal Access Token (PAT)** sebagai pengganti password biasa, atau Anda bisa login via pop-up browser bila muncul.
+![04_siaran_archive](docs/screenshots/04_siaran_archive.png)
 
 ---
 
-## 💻 5. Cara Menjalankan Website Ini di Laptop Sendiri
+### 5. Rubrik Warta Ruang Siar
+Portal berita dan jurnalisme ekosistem penyiaran, musik, teknologi, dan tren terkini.
 
-Kapan pun Anda ingin membuka dan melihat website ini di laptop, ikuti langkah ini:
-
-### Langkah 1: Install Node.js dari Nol (Jika Belum Punya)
-**Node.js** adalah "mesin penggerak" wajib agar laptop Anda bisa menyalakan website ini. Memasangnya sangat gampang, sama seperti menginstal aplikasi biasa:
-
-#### 📥 Cara Pasang Lewat Website Resmi:
-1. Buka browser dan kunjungi: **[https://nodejs.org](https://nodejs.org)**.
-2. Di halaman depan akan ada 2 tombol hijau besar. **PILIH tombol sebelah kiri** yang ada tulisan **LTS (Recommended for Most Users)**.
-3. Download file installer sesuai laptop Anda:
-   * 🍎 **Pengguna Mac:** Otomatis mendownload file `.pkg` (contoh: `node-v20.x.x.pkg`).
-   * 🪟 **Pengguna Windows:** Otomatis mendownload file `.msi` (contoh: `node-v20.x.x-x64.msi`).
-4. Klik dua kali file yang baru di-download tadi:
-   * **Di Mac:** Klik *Continue* -> *Agree* -> *Install* -> masukkan password/Touch ID -> *Close*.
-   * **Di Windows:** Klik *Next* -> centang *"I accept the terms..."* -> klik *Next* terus-menerus -> klik *Install* -> jika muncul peringatan *User Account Control*, klik *Yes* -> klik *Finish*.
-   *(Catatan untuk Windows: Jika ada kotak opsi "Automatically install necessary tools...", biarkan tidak usah dicentang agar instalasi cepat dan tidak memakan banyak memori).*
-
-#### 🔍 Cara Memastikan Node.js Sudah Terpasang:
-1. Buka jendela perintah di laptop:
-   * 🍎 **Di Mac:** Tekan `Command` + `Spasi`, ketik `Terminal`, lalu tekan `Enter`.
-   * 🪟 **Di Windows:** Tekan tombol `Windows`, ketik `cmd` atau `PowerShell`, lalu tekan `Enter`.
-2. Ketik perintah ini dan tekan `Enter`:
-   ```bash
-   node -v
-   ```
-   Jika muncul tulisan angka versi seperti `v20.18.0` atau `v22.x.x`, berarti **Node.js sudah aktif sempurna!**
-3. Cek juga pasangannya (**npm**):
-   ```bash
-   npm -v
-   ```
-   Jika muncul angka (misalnya `10.8.2`), berarti npm sudah siap digunakan.
+![05_warta_ruang_siar](docs/screenshots/05_warta_ruang_siar.png)
 
 ---
 
-### Langkah 2: Buka Folder Proyek di Terminal / Command Prompt
+### 6. Detail Artikel Warta (Tipografi Editorial)
+Halaman baca artikel warta dengan tata letak editorial yang nyaman, foto resolusi tinggi, dan format kaya teks.
 
-Pilih cara sesuai sistem operasi Anda:
-
-* 🍎 **Untuk Pengguna Mac:**
-  Buka Terminal, ketik:
-  ```bash
-  cd /Users/alvin/Desktop/Ruang_Siar
-  ```
-
-* 🪟 **Untuk Pengguna Windows (Trik Paling Mudah & Cepat Tanpa Ngetik Path Panjang):**
-  1. Buka **File Explorer** (folder kuning tempat melihat file di Windows).
-  2. Masuk ke dalam folder proyek `Ruang-Siar`.
-  3. Klik pada **Address Bar** di bagian atas (tempat tulisan `C:\Users\...`).
-  4. Hapus tulisannya, lalu ketik `cmd` atau `powershell` dan tekan `Enter`.
-  5. Jendela hitam langsung terbuka dan sudah otomatis berada di dalam folder proyek!
+![06_detail_berita](docs/screenshots/06_detail_berita.png)
 
 ---
 
-### Langkah 3: Install Kebutuhan Website (Hanya perlu sekali di awal)
-Ketik perintah ini di Terminal / CMD lalu tekan `Enter`:
+### 7. Dashboard Admin CMS & Pelacak Pengunjung Realtime
+Pantau jumlah pendengar aktif secara live, total kunjungan harian, serta grafik tren 7 hari terakhir.
+
+![07_admin_dashboard](docs/screenshots/07_admin_dashboard.png)
+
+---
+
+### 8. Manajemen Warta & Sistem Penjadwalan (Scheduled Publishing)
+Kelola artikel warta lengkap dengan indikator badge **Terjadwal**, tab filter status, dan aksi terbit/draf instan.
+
+![08_admin_warta](docs/screenshots/08_admin_warta.png)
+
+---
+
+### 9. Manajemen Episode Siaran
+Kelola episode siaran, sinkronisasi playlist YouTube, generator rundown otomatis, dan durasi siaran.
+
+![09_admin_siaran](docs/screenshots/09_admin_siaran.png)
+
+---
+
+### 10. Pengaturan Website, Live Streaming & Monetisasi AdSense
+Pusat kendali identitas website, switch mode YouTube Live Stream, konfigurasi Google AdSense, dan integrasi Google Analytics (GA4).
+
+![10_admin_pengaturan](docs/screenshots/10_admin_pengaturan.png)
+
+---
+
+## 🌟 Fitur-Fitur Utama
+
+### 🎙️ Penyiaran Radio & Audio-Visual Berbasis YouTube
+- **Legal & Patuh Hak Cipta:** Menggunakan sematan resmi YouTube IFrame Player API sehingga royalti dan kepemilikan musik tetap aman bagi pemegang hak cipta.
+- **Dual Mode Player:** Pilihan fleksibel antara tampilan video penuh atau mode **Hanya Audio (MP3 Mode)** untuk menghemat kuota pengunjung.
+- **Playlist Chaining Otomatis:** Memutar rekaman sapaan penyiar diikuti lagu-lagu pilihan secara berkesinambungan tanpa henti.
+- **Rundown Interaktif:** Setiap lagu dalam rundown memiliki timestamp yang dapat diklik untuk melompat langsung ke lagu bersangkutan di pemutar.
+- **Dukungan YouTube Live Streaming:** Dukungan siaran langsung studio (live breaking news / live talkshow) dengan switch aktif/nonaktif dari admin.
+
+### 📰 Rubrik Warta & Redaksi Jurnalisme
+- **Rich Text Formatting:** Editor penulisan warta mendukung format teks cetak tebal (**Bold**), cetak miring (*Italic*), dan garis bawah (<u>Underline</u>).
+- **Penjadwalan Terbit Otomatis (Scheduled News):** Warta dapat dijadwalkan untuk jam atau tanggal tertentu. Sistem menjamin artikel tidak bocor ke publik sebelum waktu yang ditentukan.
+- **Indikator Badge Terjadwal di CMS:** Di halaman admin, artikel masa depan ditandai secara visual dengan status `🕒 Terjadwal` dan tab filter khusus.
+- **SEO & OpenGraph Otomatis:** Setiap artikel dilengkapi tag meta deskripsi, thumbnail media sosial, slug ramah mesin pencari, dan sitemap XML dinamis.
+
+### 📊 Analitik Pengunjung Realtime (Built-in Visitor Tracker)
+- **Pelacak Pengunjung Aktif:** Menampilkan jumlah orang yang sedang membuka website dalam 5 menit terakhir.
+- **Statistik Harian & Total:** Menghitung total page views dan pengunjung unik secara otomatis ke database MySQL tanpa dependensi pihak ketiga.
+- **Grafik Tren 7 Hari:** Visualisasi tren kunjungan harian untuk mengevaluasi performa siaran dan artikel terpopuler.
+- **Integrasi Google Analytics (GA4):** Kolom pengaturan Measurement ID GA4 yang dapat diatur langsung dari CMS.
+
+### 🤖 Asisten Redaksi Cerdas (Google Gemini AI)
+- Terintegrasi langsung di pojok panel kurator CMS.
+- Membantu penyiar dan redaktur menyusun naskah siaran, merangkum berita, menyusun susunan rundown, dan mengecek ejaan.
+
+### 🛡️ Keamanan & Manajemen Data
+- **Tempat Sampah (Recycle Bin / Soft Delete):** Konten yang dihapus tersimpan di tempat sampah terlebih dahulu sebelum dapat dipulihkan (*Restore*) atau dihapus permanen.
+- **Autentikasi Aman:** Session berbasis cookie HTTP-only dengan enkripsi HMAC SHA-256.
+
+---
+
+## 🛠️ Tumpukan Teknologi (Tech Stack)
+
+| Lapisan | Teknologi | Deskripsi |
+| :--- | :--- | :--- |
+| **Framework** | [Next.js 15 (App Router)](https://nextjs.org/) | Rendering hybrid (SSR, ISR, CSR) berkinerja tinggi |
+| **UI Library** | [React 19](https://react.dev/) | Komponen antarmuka reaktif dan dinamis |
+| **Styling** | [Tailwind CSS 4](https://tailwindcss.com/) | Desain gelap modern (Dark Slate & Amber Glow) |
+| **Animasi** | [Framer Motion 12](https://www.framer.com/motion/) | Transisi mulus, dropdown, dan animasi rundown |
+| **Ikonografi** | [Lucide React](https://lucide.dev/) | Paket ikon modern berformat SVG ringan |
+| **Database** | [MySQL](https://www.mysql.com/) + `mysql2` | Penyimpanan data siaran, warta, pengaturan, dan analitik |
+| **Penyimpanan Lokal** | Fallback JSON (`.data/db.json`) | Mode fail-safe otomatis bila koneksi database terputus |
+| **Integrasi Eksternal** | YouTube Data API v3 & Google Gemini AI | Pemutar playlist, auto-fetch thumbnail & asisten AI |
+| **Deployment** | cPanel CloudLinux Passenger / Node.js Standalone | Server hosting produksi dengan sertifikat SSL otomatis |
+
+---
+
+## 🚀 Panduan Memulai di Lokal (Local Development)
+
+### 1. Kloning Repository
+```bash
+git clone git@github.com:ahmadalvin92/Ruang-Siar.git
+cd Ruang-Siar
+```
+
+### 2. Pasang Dependensi
 ```bash
 npm install
 ```
-*Tunggu proses download library selesai sampai muncul tulisan `added ... packages`.*
 
----
+### 3. Buat File Konfigurasi `.env`
+Salin template `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
+```
+Isi konfigurasi database dan API key:
+```env
+NODE_ENV="development"
+YOUTUBE_API_KEY="your_youtube_api_key"
+NEXT_PUBLIC_APP_NAME="Ruang Siar"
+NEXT_PUBLIC_APP_TAGLINE="Media & Radio Siar Kontemporer Indonesia"
+ADMIN_USERNAME="sigit_kurniawan"
+ADMIN_PASSWORD="YourSecurePassword"
+DATABASE_URL="mysql://username:password@host:3306/database_name"
+GEMINI_API_KEY="your_gemini_api_key"
+```
 
-### Langkah 4: Jalankan Mesin Website
-Ketik perintah ini lalu tekan `Enter`:
+### 4. Jalankan Server Pengembangan
 ```bash
 npm run dev
 ```
+Buka browser di [http://localhost:3000](http://localhost:3000).
 
----
-
-### Langkah 5: Buka di Browser Anda
-Setelah keluar tulisan `Ready in ...ms`, buka browser (Chrome, Edge, atau Safari) dan kunjungi:
-- 🌐 **Halaman Utama (Publik):** [http://localhost:3000](http://localhost:3000)
-- 🔐 **Halaman Login Admin:** [http://localhost:3000/login](http://localhost:3000/login)
-- 🎛️ **Halaman Dashboard CMS:** [http://localhost:3000/admin](http://localhost:3000/admin)
-
-> **Akun Login Bawaan (Default):**
-> - **Username:** `sigit_kurniawan`
-> - **Password:** `Sigitjames@1969`
-
-*(Untuk mematikan website, kembali ke jendela Terminal/CMD lalu tekan kombinasi tombol keyboard `Ctrl` + `C`).*
-
----
-
-## 🎙️ 6. Panduan Membuat Siaran Radio Baru
-
-Bagi penyiar / pengelola konten, berikut alur kerja yang direkomendasikan:
-
-1. **Rekam Suara:** Rekam suara pembuka siaran menggunakan HP atau mikrofon (format MP3).
-2. **Buat Video Sederhana:** Gabungkan suara rekaman tadi dengan gambar cover siaran di aplikasi video (seperti CapCut, Canva, atau Filmora). Simpan sebagai video MP4 berdurasi 1-3 menit.
-3. **Upload ke YouTube:** Unggah video MP4 tersebut ke channel YouTube Anda.
-4. **Buat Playlist di YouTube:**
-   - Jadikan video MP4 sapaan tadi sebagai **video nomor 1 (paling atas)** di playlist.
-   - Tambahkan lagu-lagu YouTube pilihan di urutan berikutnya (nomor 2, 3, 4, dst).
-   - Salin link playlist tersebut (contoh link playlist YouTube berakhiran: `list=PLxxxxxxxxx`).
-5. **Input ke Website:**
-   - Masuk ke `http://localhost:3000/login`.
-   - Masuk ke menu **Tambah Siaran**.
-   - Masukkan judul, nama penyiar, waktu siaran, dan tempel link playlist YouTube.
-   - Klik **Simpan**. Siaran langsung tayang di beranda website!
-
----
-
-## 🔄 7. Cara Mengirim Update ke GitHub di Masa Depan
-
-Jika suatu saat Anda mengubah tampilan, mengedit teks, atau menambah fitur baru, cara mengupdate file di GitHub sangat singkat. Cukup ketik 3 baris ini di Terminal:
-
+### 5. Build untuk Produksi
 ```bash
-git add .
-git commit -m "Update tampilan dan perbaikan tulisan"
-git push
+npm run build
+npm run start
 ```
-Semua perubahan otomatis tersimpan rapi di GitHub Anda!
 
 ---
 
-## 📂 8. Mengenal Isi Folder Proyek Ini
-
-Biar tidak bingung melihat banyak file, berikut panduan ringkasnya:
+## 📂 Struktur Direktori Proyek
 
 ```text
 Ruang_Siar/
-├── public/              📁 Tempat foto/logo website (misal: logo Ruang Siar)
-├── src/                 📁 Jantung dari website (kodingan tampilan & sistem)
-│   ├── app/             📄 Halaman-halaman web (halaman depan, admin, login, berita)
-│   ├── components/      🧩 Potongan tampilan (player musik, kartu siaran, tombol)
-│   └── lib/             ⚙️ Mesin pembantu (pengatur playlist YouTube & data)
-├── .env                 🔒 Kunci rahasia & password admin (tidak boleh di-upload ke publik)
-├── .env.example         📋 Contoh format file .env untuk orang lain
-├── .gitignore           🛡️ Daftar file yang otomatis dilarang masuk ke GitHub demi keamanan
-├── package.json         📦 Daftar aplikasi dan alat pembantu yang dipakai website ini
-└── README.md            📖 Buku panduan yang sedang Anda baca ini
+├── docs/
+│   └── screenshots/          📸 Tangkapan layar dokumentasi GitHub
+├── public/                   📁 Aset statis publik (logo, ikon, robots.txt, ads.txt)
+├── scripts/
+│   └── capture_screenshots.js 🤖 Skrip otomatisasi tangkapan layar via Chrome CDP
+├── src/
+│   ├── app/                  📄 Halaman App Router Next.js
+│   │   ├── (public)/         🌐 Halaman publik (Beranda, Siaran, Warta, Tentang, Redaksi)
+│   │   ├── admin/            🎛️ Panel CMS Kurator (Dashboard, Siaran, Berita, Pengaturan, Sampah)
+│   │   ├── api/              ⚡ Endpoint REST API (Broadcasts, News, Analytics, AI, Upload)
+│   │   └── login/            🔐 Halaman autentikasi kurator
+│   ├── components/           🧩 Komponen React UI (Player, Cards, Rundown, Grids, Modals)
+│   ├── lib/                  ⚙️ Modul logika bisnis (MySQL pool, store, YouTube, auth, Gemini)
+│   └── types/                📝 Definisi TypeScript (Broadcast, News, Settings, Stats)
+├── .env.example              📋 Contoh variabel lingkungan
+├── next.config.mjs           ⚡ Konfigurasi Next.js
+├── package.json              📦 Manajemen dependensi proyek
+└── README.md                 📖 Dokumentasi utama proyek
 ```
 
 ---
 
-## ❓ 9. Pertanyaan yang Sering Muncul (FAQ)
+## 📄 Lisensi & Hak Cipta
 
-### Q: Apakah pengunjung website akan melihat iklan YouTube?
-**Jawab:** Karena pemutar ini memakai player resmi dari YouTube (embed), kebijakan iklan mengikuti aturan YouTube dan pemilik lagu masing-masing.
-
-### Q: Kenapa link video biasa ditolak saat input siaran?
-**Jawab:** Sistem Ruang Siar dirancang khusus untuk memutar rangkaian acara (siaran + lagu-lagu). Karena itu, wajib menggunakan **Link Playlist YouTube**, bukan link video satuan biasa.
-
-### Q: Kalau laptop saya mati, apakah website bisa dibuka orang lain?
-**Jawab:** Website yang berjalan lewat `localhost:3000` hanya hidup di laptop Anda. Agar bisa dibuka oleh siapa saja di internet selama 24 jam (misalnya dengan alamat `www.ruangsiar.com`), website ini nantinya tinggal dihubungkan ke penyedia hosting gratis/mudah seperti **Vercel**.
-
----
-
-<p align="center">
-  Dibuat dengan ❤️ untuk kemajuan siaran radio & musik independen Indonesia.
-</p>
+Dikelola dan dikembangkan dengan bangga untuk ekosistem penyiaran independen Indonesia.  
+Hak Cipta © 2026 **Ruang Siar** — *Ada Untuk Anda*. Seluruh hak cipta dilindungi undang-undang.

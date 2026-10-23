@@ -25,6 +25,7 @@ export default function Navbar() {
     { name: 'Siaran', href: '/siaran' },
     { name: 'Berita', href: '/berita' },
     { name: 'Tentang', href: '/tentang' },
+    { name: 'Redaksi', href: '/redaksi' },
   ];
 
   const isActive = (path: string) => {

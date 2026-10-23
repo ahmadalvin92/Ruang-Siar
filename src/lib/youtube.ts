@@ -1,16 +1,17 @@
 /**
  * YouTube Utility functions for Ruang Siar
- * Safely parses YouTube playlist and video URLs into official embed formats
+ * Safely parses YouTube playlist, live stream, and video URLs into official embed formats
  * without scraping or downloading media files.
  */
 
 export interface ParsedYouTube {
   isValid: boolean;
-  type: 'playlist' | 'invalid';
+  type: 'playlist' | 'video' | 'live' | 'invalid';
   playlistId: string | null;
   videoId: string | null;
   embedUrl: string | null;
   defaultThumbnail: string | null;
+  isLive?: boolean;
   errorMessage?: string;
 }
 
@@ -29,17 +30,27 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
 
   const cleanUrl = rawUrl.trim();
 
-  // Handle a copied YouTube playlist ID (e.g., PLxxxxxxxx). Playlist IDs
-  // normally begin with one of these prefixes; accepting only these avoids
-  // mistaking an arbitrary video ID for a playlist.
+  // 1. Direct YouTube playlist ID (e.g., PLxxxxxxxx, RDxxxxxxx)
   if (/^(?:PL|UU|LL|FL|RD|OLAK5uy_|PLa)[a-zA-Z0-9_-]{8,}$/.test(cleanUrl)) {
     return {
       isValid: true,
       type: 'playlist',
       playlistId: cleanUrl,
       videoId: null,
-      embedUrl: `https://www.youtube-nocookie.com/embed/videoseries?list=${cleanUrl}&autoplay=0&rel=0`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/videoseries?list=${cleanUrl}&autoplay=0&rel=0&enablejsapi=1&playsinline=1`,
       defaultThumbnail: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop',
+    };
+  }
+
+  // 2. Direct 11-char video or live ID (e.g. dQw4w9WgXcQ)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(cleanUrl)) {
+    return {
+      isValid: true,
+      type: 'video',
+      playlistId: null,
+      videoId: cleanUrl,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${cleanUrl}?autoplay=0&rel=0&enablejsapi=1&playsinline=1`,
+      defaultThumbnail: `https://img.youtube.com/vi/${cleanUrl}/hqdefault.jpg`,
     };
   }
 
@@ -56,11 +67,11 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
         videoId: null,
         embedUrl: null,
         defaultThumbnail: null,
-        errorMessage: 'Gunakan tautan playlist dari YouTube',
+        errorMessage: 'Gunakan tautan resmi dari YouTube (Playlist, Live Stream, atau Video)',
       };
     }
-    
-    // Extract playlist ID if present in searchParams
+
+    const isExplicitLive = url.pathname.startsWith('/live/') || url.searchParams.get('live') === '1';
     let playlistId = url.searchParams.get('list');
     let videoId = url.searchParams.get('v');
 
@@ -73,14 +84,14 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
         videoId = url.pathname.replace('/embed/', '').split('/')[0] || null;
       } else if (url.pathname.startsWith('/playlist')) {
         playlistId = url.searchParams.get('list');
+      } else if (url.pathname.startsWith('/live/')) {
+        videoId = url.pathname.replace('/live/', '').split('/')[0].split('?')[0] || null;
       }
     }
 
-    if (playlistId) {
-      // Always start from the playlist sequence. A shared video URL can carry
-      // both `v` and `list`; using videoseries prevents it from bypassing the
-      // first item, which must be the uploaded MP4 opening broadcast.
-      const embedUrl = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&rel=0`;
+    // A. Playlist URL (priority if list param exists and not explicit /live/)
+    if (playlistId && !isExplicitLive) {
+      const embedUrl = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&rel=0&enablejsapi=1&playsinline=1`;
 
       return {
         isValid: true,
@@ -92,6 +103,21 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
       };
     }
 
+    // B. Live Stream or Single Video URL
+    if (videoId) {
+      const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&rel=0&enablejsapi=1&playsinline=1`;
+
+      return {
+        isValid: true,
+        type: isExplicitLive ? 'live' : 'video',
+        playlistId: null,
+        videoId,
+        embedUrl,
+        isLive: isExplicitLive,
+        defaultThumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      };
+    }
+
     return {
       isValid: false,
       type: 'invalid',
@@ -99,7 +125,7 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
       videoId: null,
       embedUrl: null,
       defaultThumbnail: null,
-      errorMessage: 'Masukkan link playlist YouTube, bukan link satu video',
+      errorMessage: 'Tautan YouTube tidak memuat ID playlist atau ID video yang valid',
     };
   } catch {
     return {
@@ -118,4 +144,16 @@ export function parseYouTubeUrl(rawUrl: string | null | undefined): ParsedYouTub
 export function isYouTubePlaylist(rawUrl: string | null | undefined): boolean {
   const parsed = parseYouTubeUrl(rawUrl);
   return parsed.isValid && parsed.type === 'playlist' && Boolean(parsed.playlistId);
+}
+
+/** True for a valid YouTube Live stream or video. */
+export function isYouTubeLiveOrVideo(rawUrl: string | null | undefined): boolean {
+  const parsed = parseYouTubeUrl(rawUrl);
+  return parsed.isValid && (parsed.type === 'video' || parsed.type === 'live');
+}
+
+/** True for any valid YouTube URL (playlist, video, or live stream). */
+export function isYouTubeValid(rawUrl: string | null | undefined): boolean {
+  const parsed = parseYouTubeUrl(rawUrl);
+  return parsed.isValid;
 }
