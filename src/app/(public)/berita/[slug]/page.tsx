@@ -8,7 +8,7 @@ import NewsCard from '@/components/NewsCard';
 import ShareButtons from '@/components/ShareButtons';
 import AdSenseBanner from '@/components/AdSenseBanner';
 import FormattedArticle from '@/components/FormattedArticle';
-import { formatDateTimeIndonesian } from '@/lib/utils';
+import { formatDateTimeIndonesian, getAbsoluteImageUrl } from '@/lib/utils';
 import { ArrowLeft, Calendar, User, Share2, Newspaper } from 'lucide-react';
 
 export const revalidate = 0;
@@ -29,13 +29,39 @@ export async function generateMetadata({ params }: BeritaDetailPageProps): Promi
     };
   }
 
+  const imageUrl = getAbsoluteImageUrl(news.thumbnailUrl);
+  const pageUrl = `https://ruangsiar.id/berita/${news.slug}`;
+
   return {
     title: news.title,
     description: news.excerpt,
+    alternates: {
+      canonical: pageUrl,
+    },
     openGraph: {
       title: `${news.title} | RUANG SIAR`,
       description: news.excerpt,
-      images: news.thumbnailUrl ? [news.thumbnailUrl] : [],
+      url: pageUrl,
+      siteName: 'RUANG SIAR',
+      locale: 'id_ID',
+      type: 'article',
+      publishedTime: news.publishedAt ? new Date(news.publishedAt).toISOString() : undefined,
+      authors: ['Redaksi RUANG SIAR'],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: news.title,
+          type: 'image/jpeg',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${news.title} | RUANG SIAR`,
+      description: news.excerpt,
+      images: [imageUrl],
     },
   };
 }

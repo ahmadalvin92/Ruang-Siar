@@ -3,8 +3,39 @@ import Link from 'next/link';
 import { getNewsList } from '@/lib/data/store';
 import NewsGrid from '@/components/NewsGrid';
 import { Newspaper, Search } from 'lucide-react';
+import type { Metadata } from 'next';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Warta Terkini | Ruang Siar.id',
+  description: 'Kabar dan ulasan terkurasi seputar musik, seni budaya kontemporer, dan dinamika industri kreatif tanah air.',
+  alternates: {
+    canonical: 'https://ruangsiar.id/berita',
+  },
+  openGraph: {
+    title: 'Warta Terkini | Ruang Siar.id',
+    description: 'Kabar dan ulasan terkurasi seputar musik, seni budaya kontemporer, dan dinamika industri kreatif tanah air.',
+    url: 'https://ruangsiar.id/berita',
+    siteName: 'RUANG SIAR',
+    locale: 'id_ID',
+    type: 'website',
+    images: [
+      {
+        url: 'https://ruangsiar.id/og-image.jpeg',
+        width: 1080,
+        height: 1080,
+        alt: 'Warta Terkini - RUANG SIAR',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Warta Terkini | Ruang Siar.id',
+    description: 'Kabar dan ulasan terkurasi seputar musik, seni budaya kontemporer, dan dinamika industri kreatif tanah air.',
+    images: ['https://ruangsiar.id/og-image.jpeg'],
+  },
+};
 
 interface BeritaPageProps {
   searchParams: Promise<{

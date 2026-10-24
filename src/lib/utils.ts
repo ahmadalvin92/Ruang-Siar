@@ -44,3 +44,21 @@ export function formatDateTimeIndonesian(dateStr: string | Date | undefined): st
     return String(dateStr);
   }
 }
+
+/**
+ * Returns a fully qualified absolute URL for images (OpenGraph, Twitter cards, social media).
+ * Always returns https://ruangsiar.id/... so social crawlers (WhatsApp, Facebook, Twitter, Telegram)
+ * can crawl and render thumbnail previews properly.
+ */
+export function getAbsoluteImageUrl(url?: string | null): string {
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://ruangsiar.id').replace(/\/+$/, '');
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    return `${siteUrl}/og-image.jpeg`;
+  }
+  const cleanUrl = url.trim();
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+    return cleanUrl;
+  }
+  return `${siteUrl}${cleanUrl.startsWith('/') ? '' : '/'}${cleanUrl}`;
+}
+

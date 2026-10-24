@@ -39,7 +39,9 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
           status: 200,
           headers: {
             'Content-Type': contentType,
+            'Content-Length': String(fileBuffer.length),
             'Cache-Control': 'public, max-age=31536000, immutable',
+            'Accept-Ranges': 'bytes',
           },
         });
       }
@@ -50,3 +52,12 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     return new NextResponse('Terjadi kesalahan memuat media', { status: 500 });
   }
 }
+
+export async function HEAD(request: NextRequest, context: RouteContext) {
+  const response = await GET(request, context);
+  return new NextResponse(null, {
+    status: response.status,
+    headers: response.headers,
+  });
+}
+

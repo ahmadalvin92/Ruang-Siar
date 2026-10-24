@@ -13,11 +13,30 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: 'Ruang Siar.id — Radio & Media Audio-Visual Indonesia',
   description: 'Platform siaran kontemporer Indonesia. Nikmati narasi penyiar yang hangat dipadukan kurasi playlist YouTube resmi untuk pengalaman audio-visual yang menginspirasi.',
+  alternates: {
+    canonical: 'https://ruangsiar.id',
+  },
   openGraph: {
     title: 'Ruang Siar.id — Radio & Media Audio-Visual Indonesia',
     description: 'Platform siaran kontemporer Indonesia. Narasi penyiar berpadu playlist resmi YouTube.',
-    siteName: 'Ruang Siar',
+    url: 'https://ruangsiar.id',
+    siteName: 'RUANG SIAR',
+    locale: 'id_ID',
     type: 'website',
+    images: [
+      {
+        url: 'https://ruangsiar.id/og-image.jpeg',
+        width: 1080,
+        height: 1080,
+        alt: 'Ruang Siar.id — Radio & Media Audio-Visual Indonesia',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ruang Siar.id — Radio & Media Audio-Visual Indonesia',
+    description: 'Platform siaran kontemporer Indonesia. Narasi penyiar berpadu playlist resmi YouTube.',
+    images: ['https://ruangsiar.id/og-image.jpeg'],
   },
 };
 

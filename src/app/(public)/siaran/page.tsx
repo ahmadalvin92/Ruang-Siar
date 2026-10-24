@@ -11,6 +11,31 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: 'Semua Siaran | Ruang Siar.id',
   description: 'Temukan arsip siaran tematik harian Ruang Siar. Paduan narasi penyiar berpadu playlist kurasi YouTube untuk menemani setiap fase waktu Anda.',
+  alternates: {
+    canonical: 'https://ruangsiar.id/siaran',
+  },
+  openGraph: {
+    title: 'Semua Siaran | Ruang Siar.id',
+    description: 'Temukan arsip siaran tematik harian Ruang Siar. Paduan narasi penyiar berpadu playlist kurasi YouTube untuk menemani setiap fase waktu Anda.',
+    url: 'https://ruangsiar.id/siaran',
+    siteName: 'RUANG SIAR',
+    locale: 'id_ID',
+    type: 'website',
+    images: [
+      {
+        url: 'https://ruangsiar.id/og-image.jpeg',
+        width: 1080,
+        height: 1080,
+        alt: 'Semua Siaran - RUANG SIAR',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Semua Siaran | Ruang Siar.id',
+    description: 'Temukan arsip siaran tematik harian Ruang Siar. Paduan narasi penyiar berpadu playlist kurasi YouTube untuk menemani setiap fase waktu Anda.',
+    images: ['https://ruangsiar.id/og-image.jpeg'],
+  },
 };
 
 interface SiaranPageProps {

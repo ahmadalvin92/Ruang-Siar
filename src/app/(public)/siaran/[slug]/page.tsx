@@ -8,7 +8,7 @@ import BroadcastCard from '@/components/BroadcastCard';
 import RundownWidget from '@/components/RundownWidget';
 import AdSenseBanner from '@/components/AdSenseBanner';
 import ShareButtons from '@/components/ShareButtons';
-import { formatDateIndonesian, formatDateTimeIndonesian } from '@/lib/utils';
+import { formatDateIndonesian, formatDateTimeIndonesian, getAbsoluteImageUrl } from '@/lib/utils';
 import { ArrowLeft, Clock, Calendar, Disc3, Radio, Share2, Music2, Info } from 'lucide-react';
 
 export const revalidate = 0;
@@ -32,13 +32,37 @@ export async function generateMetadata({ params }: SiaranDetailPageProps): Promi
     };
   }
 
+  const imageUrl = getAbsoluteImageUrl(broadcast.thumbnailUrl);
+  const pageUrl = `https://ruangsiar.id/siaran/${broadcast.slug}`;
+
   return {
     title: broadcast.title,
     description: broadcast.description,
+    alternates: {
+      canonical: pageUrl,
+    },
     openGraph: {
       title: `${broadcast.title} | RUANG SIAR`,
       description: broadcast.description,
-      images: broadcast.thumbnailUrl ? [broadcast.thumbnailUrl] : [],
+      url: pageUrl,
+      siteName: 'RUANG SIAR',
+      locale: 'id_ID',
+      type: 'video.episode',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: broadcast.title,
+          type: 'image/jpeg',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${broadcast.title} | RUANG SIAR`,
+      description: broadcast.description,
+      images: [imageUrl],
     },
   };
 }

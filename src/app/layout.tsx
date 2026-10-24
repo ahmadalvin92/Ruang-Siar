@@ -5,6 +5,7 @@ import AnalyticsTracker from '@/components/AnalyticsTracker';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ruangsiar.id'),
   title: {
     default: 'RUANG SIAR - Media & Radio Siar Kontemporer Indonesia',
     template: '%s | RUANG SIAR',
@@ -32,6 +33,21 @@ export const metadata: Metadata = {
     siteName: 'RUANG SIAR',
     locale: 'id_ID',
     type: 'website',
+    images: [
+      {
+        url: 'https://ruangsiar.id/og-image.jpeg',
+        width: 1080,
+        height: 1080,
+        alt: 'RUANG SIAR - Media & Radio Siar Kontemporer Indonesia',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RUANG SIAR - Media & Radio Siar Kontemporer Indonesia',
+    description:
+      'Sajian siaran audio-visual kontemporer nusantara bertenaga playlist kurasi YouTube resmi.',
+    images: ['https://ruangsiar.id/og-image.jpeg'],
   },
   other: {
     'google-adsense-account': 'ca-pub-5854985607866680',
