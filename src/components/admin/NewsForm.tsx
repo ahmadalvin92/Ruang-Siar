@@ -146,15 +146,23 @@ export default function NewsForm({ initialData, isEdit = false }: NewsFormProps)
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   };
 
-  // Quick preset helper for publishedAt (e.g. ojol report backdating)
-  const setPublishTimePreset = (type: 'now' | 'minus1h' | 'minus2h' | 'morning7') => {
+  // Quick preset helper for publishedAt (e.g. scheduling forward or backdating)
+  const setPublishTimePreset = (type: 'now' | 'minus1h' | 'minus2h' | 'plus1h' | 'plus2h' | 'morning7' | 'noon12' | 'evening16') => {
     const d = new Date();
     if (type === 'minus1h') {
       d.setHours(d.getHours() - 1);
     } else if (type === 'minus2h') {
       d.setHours(d.getHours() - 2);
+    } else if (type === 'plus1h') {
+      d.setHours(d.getHours() + 1);
+    } else if (type === 'plus2h') {
+      d.setHours(d.getHours() + 2);
     } else if (type === 'morning7') {
       d.setHours(7, 0, 0, 0);
+    } else if (type === 'noon12') {
+      d.setHours(12, 0, 0, 0);
+    } else if (type === 'evening16') {
+      d.setHours(16, 30, 0, 0);
     }
     setFormData((prev) => ({ ...prev, publishedAt: d.toISOString() }));
   };
@@ -752,17 +760,38 @@ export default function NewsForm({ initialData, isEdit = false }: NewsFormProps)
                   </button>
                   <button
                     type="button"
-                    onClick={() => setPublishTimePreset('minus2h')}
-                    className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold transition-colors"
+                    onClick={() => setPublishTimePreset('plus1h')}
+                    className="px-2 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-semibold transition-colors"
                   >
-                    ⏪ -2 Jam
+                    ⏩ +1 Jam
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPublishTimePreset('plus2h')}
+                    className="px-2 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-semibold transition-colors"
+                  >
+                    ⏩ +2 Jam
                   </button>
                   <button
                     type="button"
                     onClick={() => setPublishTimePreset('morning7')}
                     className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold transition-colors"
                   >
-                    🌅 07:00 Pagi
+                    🌅 07:00
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPublishTimePreset('noon12')}
+                    className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold transition-colors"
+                  >
+                    ☀️ 12:00
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPublishTimePreset('evening16')}
+                    className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold transition-colors"
+                  >
+                    🌇 16:30
                   </button>
                 </div>
               </div>

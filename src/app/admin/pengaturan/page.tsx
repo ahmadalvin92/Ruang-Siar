@@ -20,6 +20,7 @@ import {
   ExternalLink,
   BarChart3,
   Globe,
+  Sparkles,
 } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon, TwitterIcon } from '@/components/icons';
 
@@ -319,63 +320,149 @@ export default function AdminSettingsPage() {
 
           {/* Section 3: Jadwal Siar Footer */}
           <div className="rounded-2xl bg-slate-900/60 border border-slate-800/80 p-6 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-amber-400" /> 3. Jadwal Siaran (Footer)
+                  <Clock className="w-5 h-5 text-amber-400" /> 3. Jadwal Siaran (Footer Website)
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Daftar jam siar yang tampil pada bagian kolom tengah footer.
+                  Ubah jam tayang dan nama sesi siaran yang tampil pada kolom Jadwal Siar di footer website.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={addSchedule}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 text-xs font-semibold transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" /> Tambah Baris
+                <Plus className="w-3.5 h-3.5" /> Tambah Baris Jadwal
               </button>
             </div>
 
-            <div className="space-y-3">
+            {/* List of Schedules */}
+            <div className="space-y-4">
               {settings.schedules.map((item, index) => (
-                <div key={index} className="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
-                  <input
-                    type="text"
-                    value={item.time}
-                    onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
-                    placeholder="Waktu (e.g. 06:00 – 09:00)"
-                    className="w-1/3 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:border-amber-500 focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    value={item.name}
-                    onChange={(e) => handleScheduleChange(index, 'name', e.target.value)}
-                    placeholder="Nama Program / Sesi"
-                    className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
-                  />
-                  <select
-                    value={item.color}
-                    onChange={(e) => handleScheduleChange(index, 'color', e.target.value)}
-                    className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
-                  >
-                    <option value="text-amber-400">Kuning / Amber</option>
-                    <option value="text-orange-400">Orange</option>
-                    <option value="text-rose-400">Merah / Rose</option>
-                    <option value="text-purple-400">Ungu / Purple</option>
-                    <option value="text-sky-400">Biru / Sky</option>
-                    <option value="text-emerald-400">Hijau / Emerald</option>
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => removeSchedule(index)}
-                    className="p-2 text-slate-500 hover:text-rose-400 transition-colors"
-                    title="Hapus"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                <div
+                  key={index}
+                  className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 space-y-3 transition-all hover:border-slate-700"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                    {/* Waktu / Jam */}
+                    <div className="sm:col-span-5">
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        ⏰ Jam / Waktu Siar
+                      </label>
+                      <input
+                        type="text"
+                        value={item.time}
+                        onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
+                        placeholder="Contoh: 06:00 – 09:00 atau Khusus"
+                        className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:border-amber-500 focus:outline-none"
+                      />
+                    </div>
+
+                    {/* Nama Sesi / Program */}
+                    <div className="sm:col-span-4">
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        📻 Nama Program / Sesi
+                      </label>
+                      <input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) => handleScheduleChange(index, 'name', e.target.value)}
+                        placeholder="Contoh: Pagi / Obrolan Santai"
+                        className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                      />
+                    </div>
+
+                    {/* Warna Titik */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        🎨 Warna Dot
+                      </label>
+                      <select
+                        value={item.color}
+                        onChange={(e) => handleScheduleChange(index, 'color', e.target.value)}
+                        className="w-full px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                      >
+                        <option value="text-amber-400">🟡 Kuning</option>
+                        <option value="text-orange-400">🟠 Orange</option>
+                        <option value="text-rose-400">🔴 Merah</option>
+                        <option value="text-purple-400">🟣 Ungu</option>
+                        <option value="text-sky-400">🔵 Biru</option>
+                        <option value="text-emerald-400">🟢 Hijau</option>
+                      </select>
+                    </div>
+
+                    {/* Action Hapus */}
+                    <div className="sm:col-span-1 flex items-center justify-end sm:justify-center pt-2 sm:pt-4">
+                      <button
+                        type="button"
+                        onClick={() => removeSchedule(index)}
+                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+                        title="Hapus baris jadwal ini"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Preset Cepat untuk baris ini */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[10px] text-slate-500">
+                    <span>Preset Jam Cepat:</span>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleChange(index, 'time', '06:00 – 09:00')}
+                      className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 transition-colors"
+                    >
+                      06:00 – 09:00
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleChange(index, 'time', '12:00 – 14:00')}
+                      className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 transition-colors"
+                    >
+                      12:00 – 14:00
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleChange(index, 'time', '16:30 – 19:00')}
+                      className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 transition-colors"
+                    >
+                      16:30 – 19:00
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleChange(index, 'time', '21:00 – 23:00')}
+                      className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 transition-colors"
+                    >
+                      21:00 – 23:00
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleChange(index, 'time', 'Khusus')}
+                      className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800 transition-colors"
+                    >
+                      Khusus
+                    </button>
+                  </div>
                 </div>
               ))}
+            </div>
+
+            {/* Live Preview Card */}
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-amber-500/20 space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400">
+                <Sparkles className="w-3.5 h-3.5" /> Pratinjau Tampilan di Footer Website:
+              </div>
+              <ul className="space-y-2 text-xs text-slate-300 pt-1">
+                {(settings.schedules || []).map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full bg-current shrink-0 ${item.color || 'text-amber-400'}`} />
+                    <span className="font-mono text-xs text-slate-400">{item.time || '—'}</span>
+                    <span className={`font-medium ${item.color || 'text-amber-400'}`}>{item.name || '—'}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
