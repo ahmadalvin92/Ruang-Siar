@@ -6,7 +6,7 @@ import AdSenseBanner from '@/components/AdSenseBanner';
 import { Radio, Search, Disc3, Filter, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
 
-export const revalidate = 0;
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: 'Semua Siaran | Ruang Siar.id',

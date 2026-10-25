@@ -56,16 +56,26 @@ export default function ShareButtons({
     }
   };
 
+  const shareTargetUrl = currentUrl || (typeof window !== 'undefined' ? window.location.href : 'https://ruangsiar.id');
   const shareText = encodeURIComponent(`${title} — Ruang Siar`);
-  const shareTargetUrl = encodeURIComponent(currentUrl);
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${shareText}%0A${shareTargetUrl}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareTargetUrl}`;
+  const encodedUrl = encodeURIComponent(shareTargetUrl);
+  const whatsappUrl = `https://wa.me/?text=${shareText}%0A${encodedUrl}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${encodedUrl}`;
+
+  const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // On mobile devices, launching whatsapp:// scheme directly bypasses the slow web redirect
+    if (typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      e.preventDefault();
+      window.location.href = `whatsapp://send?text=${shareText}%0A${encodedUrl}`;
+    }
+  };
 
   if (variant === 'compact') {
     return (
       <div className={`flex items-center gap-1.5 ${className}`}>
         <a
           href={whatsappUrl}
+          onClick={handleWhatsAppClick}
           target="_blank"
           rel="noopener noreferrer"
           title="Bagikan ke WhatsApp"
@@ -108,6 +118,7 @@ export default function ShareButtons({
           {/* WhatsApp Button */}
           <a
             href={whatsappUrl}
+            onClick={handleWhatsAppClick}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm"
@@ -162,6 +173,11 @@ export default function ShareButtons({
             )}
           </button>
         </div>
+      </div>
+
+      <div className="flex items-center gap-1.5 pt-3 mt-3 border-t border-slate-800/60 text-[11px] text-slate-400">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+        <span>Tips: Saat membuka WhatsApp, beri jeda 1–2 detik sampai gambar kartu berita muncul di atas chat sebelum menekan tombol Kirim.</span>
       </div>
     </div>
   );

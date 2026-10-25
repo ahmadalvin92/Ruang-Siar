@@ -5,7 +5,7 @@ import NewsGrid from '@/components/NewsGrid';
 import { Newspaper, Search } from 'lucide-react';
 import type { Metadata } from 'next';
 
-export const revalidate = 0;
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: 'Warta Terkini | Ruang Siar.id',

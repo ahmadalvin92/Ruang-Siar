@@ -11,7 +11,7 @@ import FormattedArticle from '@/components/FormattedArticle';
 import { formatDateTimeIndonesian, getAbsoluteImageUrl } from '@/lib/utils';
 import { ArrowLeft, Calendar, User, Share2, Newspaper } from 'lucide-react';
 
-export const revalidate = 0;
+export const revalidate = 30;
 
 interface BeritaDetailPageProps {
   params: Promise<{
@@ -50,6 +50,7 @@ export async function generateMetadata({ params }: BeritaDetailPageProps): Promi
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 630,
           alt: news.title,
@@ -74,8 +75,9 @@ export default async function BeritaDetailPage({ params }: BeritaDetailPageProps
     notFound();
   }
 
-  const allNews = await getNewsList({ status: 'Published' });
-  const otherNews = allNews.filter((n) => n.id !== news.id).slice(0, 2);
+  const pageUrl = `https://ruangsiar.id/berita/${news.slug}`;
+  const recentNews = await getNewsList({ status: 'Published', limit: 4 });
+  const otherNews = recentNews.filter((n) => n.id !== news.id).slice(0, 2);
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14">
@@ -149,6 +151,7 @@ export default async function BeritaDetailPage({ params }: BeritaDetailPageProps
         <ShareButtons
           title={news.title}
           description={news.excerpt}
+          url={pageUrl}
         />
       </div>
 

@@ -11,7 +11,7 @@ import ShareButtons from '@/components/ShareButtons';
 import { formatDateIndonesian, formatDateTimeIndonesian, getAbsoluteImageUrl } from '@/lib/utils';
 import { ArrowLeft, Clock, Calendar, Disc3, Radio, Share2, Music2, Info } from 'lucide-react';
 
-export const revalidate = 0;
+export const revalidate = 30;
 
 interface SiaranDetailPageProps {
   params: Promise<{
@@ -51,6 +51,7 @@ export async function generateMetadata({ params }: SiaranDetailPageProps): Promi
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 630,
           alt: broadcast.title,
@@ -181,6 +182,7 @@ export default async function SiaranDetailPage({ params, searchParams }: SiaranD
             <ShareButtons
               title={broadcast.title}
               description={broadcast.description}
+              url={`https://ruangsiar.id/siaran/${broadcast.slug}`}
             />
           </div>
 

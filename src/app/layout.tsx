@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: 'https://ruangsiar.id/og-image.jpeg',
+        secureUrl: 'https://ruangsiar.id/og-image.jpeg',
         width: 1080,
         height: 1080,
         alt: 'RUANG SIAR - Media & Radio Siar Kontemporer Indonesia',

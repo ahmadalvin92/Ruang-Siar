@@ -208,10 +208,8 @@ export async function getBroadcastBySlug(slug: string, options?: { allowFuture?:
     item = db.broadcasts.find((b) => b.slug === slug || b.id === slug) || null;
   }
 
-  if (item && !options?.allowFuture && item.status === 'Published') {
-    if (new Date(item.publishedAt).getTime() > Date.now()) {
-      return null;
-    }
+  if (item && item.status === 'Archived') {
+    return null;
   }
 
   return item;
@@ -496,10 +494,8 @@ export async function getNewsBySlug(slug: string, options?: { allowFuture?: bool
     item = db.news.find((n) => n.slug === slug || n.id === slug) || null;
   }
 
-  if (item && !options?.allowFuture && item.status === 'Published') {
-    if (new Date(item.publishedAt).getTime() > Date.now()) {
-      return null;
-    }
+  if (item && item.status === 'Archived') {
+    return null;
   }
 
   return item;

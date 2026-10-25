@@ -8,7 +8,7 @@ import AdSenseBanner from '@/components/AdSenseBanner';
 import { Radio, ArrowRight, Disc3, Sparkles, Headphones, Music2, ShieldCheck, Zap, MessageCircle, Users } from 'lucide-react';
 import type { Metadata } from 'next';
 
-export const revalidate = 0;
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: 'Ruang Siar.id — Radio & Media Audio-Visual Indonesia',
