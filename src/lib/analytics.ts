@@ -288,3 +288,52 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     topPages,
   };
 }
+
+/**
+ * Retrieve total pageviews mapped by slug/id for content items (news & broadcasts)
+ */
+export async function getContentViewsMap(type?: 'berita' | 'siaran'): Promise<Record<string, number>> {
+  const map: Record<string, number> = {};
+
+  if (isMysqlConfigured()) {
+    try {
+      const pool = getDbPool();
+      if (pool) {
+        let condition = "(path LIKE '/berita/%' OR path LIKE '/siaran/%')";
+        if (type === 'berita') condition = "path LIKE '/berita/%'";
+        if (type === 'siaran') condition = "path LIKE '/siaran/%'";
+
+        const [rows]: any = await pool.query(
+          `SELECT path, COUNT(*) as views FROM page_views WHERE ${condition} GROUP BY path`
+        );
+        for (const r of rows) {
+          const rawPath = String(r.path || '');
+          const slug = rawPath.replace(/^\/(berita|siaran)\//, '').replace(/\/$/, '').split('?')[0];
+          if (slug) {
+            map[slug] = (map[slug] || 0) + Number(r.views || 0);
+          }
+        }
+        return map;
+      }
+    } catch (err) {
+      console.warn('MySQL getContentViewsMap failed, falling back to local store:', err);
+    }
+  }
+
+  // Fallback to local JSON store
+  try {
+    const store = getLocalStore();
+    for (const v of store.views) {
+      if (v.path) {
+        if (type === 'berita' && !v.path.startsWith('/berita/')) continue;
+        if (type === 'siaran' && !v.path.startsWith('/siaran/')) continue;
+        const slug = v.path.replace(/^\/(berita|siaran)\//, '').replace(/\/$/, '').split('?')[0];
+        if (slug) {
+          map[slug] = (map[slug] || 0) + 1;
+        }
+      }
+    }
+  } catch {}
+
+  return map;
+}

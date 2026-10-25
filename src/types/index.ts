@@ -21,6 +21,7 @@ export interface Broadcast {
   createdAt: string;
   updatedAt: string;
   rundown?: RundownItem[];
+  views?: number;
 }
 
 export interface News {
@@ -35,6 +36,7 @@ export interface News {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+  views?: number;
 }
 
 export interface BroadcastFormData {

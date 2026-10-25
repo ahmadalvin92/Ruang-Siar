@@ -17,6 +17,31 @@ import {
   mysqlUpdateNews,
   mysqlDeleteNews,
 } from './mysql';
+import { getContentViewsMap } from '@/lib/analytics';
+
+export async function attachViewsToBroadcasts(items: Broadcast[]): Promise<Broadcast[]> {
+  try {
+    const viewsMap = await getContentViewsMap('siaran');
+    return items.map((item) => ({
+      ...item,
+      views: (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0),
+    }));
+  } catch {
+    return items;
+  }
+}
+
+export async function attachViewsToNews(items: News[]): Promise<News[]> {
+  try {
+    const viewsMap = await getContentViewsMap('berita');
+    return items.map((item) => ({
+      ...item,
+      views: (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0),
+    }));
+  } catch {
+    return items;
+  }
+}
 
 export const defaultSettings: SiteSettings = {
   siteName: 'Ruang Siar',
@@ -145,49 +170,59 @@ export async function getBroadcasts(options?: {
   category?: string;
   limit?: number;
   includeFuture?: boolean;
+  includeViews?: boolean;
 }): Promise<Broadcast[]> {
+  let list: Broadcast[] | null = null;
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetBroadcasts(options);
+      list = await mysqlGetBroadcasts(options);
     } catch (err) {
       console.warn('MySQL getBroadcasts failed, falling back to local store:', err);
     }
   }
 
-  const db = ensureDb();
-  let list = [...db.broadcasts];
+  if (list === null) {
+    const db = ensureDb();
+    let localList = [...db.broadcasts];
 
-  if (options?.status) {
-    if (options.status === 'Published' && !options?.includeFuture) {
+    if (options?.status) {
+      if (options.status === 'Published' && !options?.includeFuture) {
+        const now = Date.now();
+        localList = localList.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
+      } else {
+        localList = localList.filter((b) => b.status === options.status);
+      }
+    } else if (!options?.includeFuture) {
       const now = Date.now();
-      list = list.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
-    } else {
-      list = list.filter((b) => b.status === options.status);
+      localList = localList.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
     }
-  } else if (!options?.includeFuture) {
-    const now = Date.now();
-    list = list.filter((b) => b.status === 'Published' && new Date(b.publishedAt).getTime() <= now);
+
+    if (options?.category && options.category !== 'Semua') {
+      localList = localList.filter((b) => b.category.toLowerCase() === options.category?.toLowerCase());
+    }
+
+    if (options?.search) {
+      const q = options.search.toLowerCase();
+      localList = localList.filter(
+        (b) =>
+          b.title.toLowerCase().includes(q) ||
+          b.description.toLowerCase().includes(q) ||
+          b.category.toLowerCase().includes(q)
+      );
+    }
+
+    // Sort by publishedAt descending
+    localList.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+    if (options?.limit) {
+      localList = localList.slice(0, options.limit);
+    }
+
+    list = localList;
   }
 
-  if (options?.category && options.category !== 'Semua') {
-    list = list.filter((b) => b.category.toLowerCase() === options.category?.toLowerCase());
-  }
-
-  if (options?.search) {
-    const q = options.search.toLowerCase();
-    list = list.filter(
-      (b) =>
-        b.title.toLowerCase().includes(q) ||
-        b.description.toLowerCase().includes(q) ||
-        b.category.toLowerCase().includes(q)
-    );
-  }
-
-  // Sort by publishedAt descending
-  list.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-
-  if (options?.limit) {
-    list = list.slice(0, options.limit);
+  if (options?.includeViews !== false) {
+    list = await attachViewsToBroadcasts(list);
   }
 
   return list;
@@ -212,24 +247,38 @@ export async function getBroadcastBySlug(slug: string, options?: { allowFuture?:
     return null;
   }
 
+  if (item) {
+    const viewsMap = await getContentViewsMap('siaran');
+    item.views = (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0);
+  }
+
   return item;
 }
 
 export async function getBroadcastById(id: string): Promise<Broadcast | null> {
+  let item: Broadcast | null = null;
   if (isMysqlConfigured()) {
     try {
-      const item = await mysqlGetBroadcastById(id);
-      if (item) return item;
-      // Also try matching by slug in case slug was passed as id in the URL!
-      const bySlug = await mysqlGetBroadcastBySlug(id);
-      if (bySlug) return bySlug;
+      item = await mysqlGetBroadcastById(id);
+      if (!item) {
+        // Also try matching by slug in case slug was passed as id in the URL!
+        item = await mysqlGetBroadcastBySlug(id);
+      }
     } catch (err) {
       console.warn('MySQL getBroadcastById failed, falling back to local store:', err);
     }
   }
-  const db = ensureDb();
-  const found = db.broadcasts.find((b) => b.id === id || b.slug === id);
-  return found || null;
+  if (!item) {
+    const db = ensureDb();
+    item = db.broadcasts.find((b) => b.id === id || b.slug === id) || null;
+  }
+
+  if (item) {
+    const viewsMap = await getContentViewsMap('siaran');
+    item.views = (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0);
+  }
+
+  return item;
 }
 
 
@@ -430,50 +479,60 @@ export async function getNewsList(options?: {
   category?: string;
   limit?: number;
   includeFuture?: boolean;
+  includeViews?: boolean;
 }): Promise<News[]> {
+  let list: News[] | null = null;
   if (isMysqlConfigured()) {
     try {
-      return await mysqlGetNews(options);
+      list = await mysqlGetNews(options);
     } catch (err) {
       console.warn('MySQL getNews failed, falling back to local store:', err);
     }
   }
 
-  const db = ensureDb();
-  let list = [...db.news];
+  if (list === null) {
+    const db = ensureDb();
+    let localList = [...db.news];
 
-  if (options?.status) {
-    if (options.status === 'Published' && !options?.includeFuture) {
+    if (options?.status) {
+      if (options.status === 'Published' && !options?.includeFuture) {
+        const now = Date.now();
+        localList = localList.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
+      } else {
+        localList = localList.filter((n) => n.status === options.status);
+      }
+    } else if (!options?.includeFuture) {
       const now = Date.now();
-      list = list.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
-    } else {
-      list = list.filter((n) => n.status === options.status);
+      localList = localList.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
     }
-  } else if (!options?.includeFuture) {
-    const now = Date.now();
-    list = list.filter((n) => n.status === 'Published' && new Date(n.publishedAt).getTime() <= now);
+
+    if (options?.category && options.category !== 'Semua') {
+      localList = localList.filter((n) => n.category.toLowerCase() === options.category?.toLowerCase());
+    }
+
+    if (options?.search) {
+      const q = options.search.toLowerCase();
+      localList = localList.filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          n.excerpt.toLowerCase().includes(q) ||
+          n.content.toLowerCase().includes(q) ||
+          n.category.toLowerCase().includes(q)
+      );
+    }
+
+    // Sort by publishedAt descending
+    localList.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+    if (options?.limit) {
+      localList = localList.slice(0, options.limit);
+    }
+
+    list = localList;
   }
 
-  if (options?.category && options.category !== 'Semua') {
-    list = list.filter((n) => n.category.toLowerCase() === options.category?.toLowerCase());
-  }
-
-  if (options?.search) {
-    const q = options.search.toLowerCase();
-    list = list.filter(
-      (n) =>
-        n.title.toLowerCase().includes(q) ||
-        n.excerpt.toLowerCase().includes(q) ||
-        n.content.toLowerCase().includes(q) ||
-        n.category.toLowerCase().includes(q)
-    );
-  }
-
-  // Sort by publishedAt descending
-  list.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-
-  if (options?.limit) {
-    list = list.slice(0, options.limit);
+  if (options?.includeViews !== false) {
+    list = await attachViewsToNews(list);
   }
 
   return list;
@@ -498,24 +557,38 @@ export async function getNewsBySlug(slug: string, options?: { allowFuture?: bool
     return null;
   }
 
+  if (item) {
+    const viewsMap = await getContentViewsMap('berita');
+    item.views = (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0);
+  }
+
   return item;
 }
 
 export async function getNewsById(id: string): Promise<News | null> {
+  let item: News | null = null;
   if (isMysqlConfigured()) {
     try {
-      const item = await mysqlGetNewsById(id);
-      if (item) return item;
-      const bySlug = await mysqlGetNewsBySlug(id);
-      if (bySlug) return bySlug;
+      item = await mysqlGetNewsById(id);
+      if (!item) {
+        item = await mysqlGetNewsBySlug(id);
+      }
     } catch (err) {
       console.warn('MySQL getNewsById failed, falling back to local store:', err);
     }
   }
 
-  const db = ensureDb();
-  const found = db.news.find((n) => n.id === id || n.slug === id);
-  return found || null;
+  if (!item) {
+    const db = ensureDb();
+    item = db.news.find((n) => n.id === id || n.slug === id) || null;
+  }
+
+  if (item) {
+    const viewsMap = await getContentViewsMap('berita');
+    item.views = (viewsMap[item.slug] || 0) + (item.id && item.id !== item.slug ? (viewsMap[item.id] || 0) : 0);
+  }
+
+  return item;
 }
 
 export async function createNews(data: NewsFormData): Promise<News> {

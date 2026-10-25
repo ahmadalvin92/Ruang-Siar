@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -42,6 +42,11 @@ export default function NewsTableClient({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
+
+  // Sync newsList when initialNews updates from server revalidation
+  useEffect(() => {
+    setNewsList(isTrashView ? initialNews.filter((n) => n.status === 'Archived') : initialNews);
+  }, [initialNews, isTrashView]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -444,6 +449,15 @@ export default function NewsTableClient({
                         <div className="inline-flex items-center gap-2">
                           {isArchived ? (
                             <>
+                              {/* Reader Count in Trash */}
+                              <div
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 font-mono text-xs"
+                                title={`${(item.views || 0).toLocaleString('id-ID')} kali dibaca sebelum dihapus`}
+                              >
+                                <Eye className="w-3.5 h-3.5 text-slate-500" />
+                                <span className="font-bold text-[11px]">{(item.views || 0).toLocaleString('id-ID')}</span>
+                              </div>
+
                               {/* Restore Button */}
                               <button
                                 onClick={() => handleRestore(item)}
@@ -468,14 +482,15 @@ export default function NewsTableClient({
                             </>
                           ) : (
                             <>
-                              {/* Preview Public */}
+                              {/* Preview Public & Reader Count Symbol */}
                               <Link
                                 href={`/berita/${item.slug}`}
                                 target="_blank"
-                                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                                title="Pratinjau Publik"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 hover:text-sky-300 border border-sky-500/25 hover:border-sky-500/40 transition-all font-mono text-xs font-semibold group shadow-sm"
+                                title={`${(item.views || 0).toLocaleString('id-ID')} pembaca (diklik/dibaca) • Klik untuk pratinjau publik`}
                               >
-                                <Eye className="w-3.5 h-3.5" />
+                                <Eye className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
+                                <span className="text-[11px] font-bold">{(item.views || 0).toLocaleString('id-ID')}</span>
                               </Link>
 
                               {/* Edit Button */}
